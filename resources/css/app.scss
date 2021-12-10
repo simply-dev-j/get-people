@@ -10,6 +10,8 @@ body {
     background-color: $body-bg;
 }
 
+// customization of bootstrap default
+
 .form-input {
     border-radius: 0px !important;
     margin-bottom: 0.5em;
@@ -28,6 +30,57 @@ body {
 .card {
     border-radius: 0px !important;
     margin-bottom: 0.5em;
+}
+
+.navbar {
+    position: fixed;
+    top: 0px;
+    display: flex;
+    width: 100%;
+    height: $navbar-height;
+    padding: 10px;
+
+    .avatar {
+        img{
+            height: 100%;
+            width: auto;
+            border-radius: 50%;
+            border-color: gray;
+            border-width: 2px;
+            border-style: solid;
+        }
+        span {
+            font-weight: bold;
+        }
+    }
+
+    .language {
+        display: flex;
+
+        .language-item {
+            text-align: center;
+            font-size: 10px;
+            margin-left: 10px;
+
+            &.active {
+                font-weight: bold;
+
+                img {
+                    border: 2px solid gray;
+                }
+            }
+
+            img {
+                border-radius: 50%;
+                width: $navbar-lang-item-size;
+                height: $navbar-lang-item-size;
+            }
+        }
+    }
+}
+
+.app-content {
+    padding-top: 80px;
 }
 
 

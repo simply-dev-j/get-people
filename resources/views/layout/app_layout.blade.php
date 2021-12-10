@@ -31,6 +31,7 @@
 <body>
     @section('app-body')
         <div class="app-body min-vh-100" id="app-body">
+            @include('navbar.navbar')
 
             <div class="app-content container" id="app-content">
                 @yield('content')

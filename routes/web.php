@@ -19,6 +19,15 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+// locale
+Route::any('/locale/{locale}', function($locale) {
+    App::setLocale($locale);
+    session(['locale' => $locale]);
+
+    return redirect()->back();
+})->name(WebRoute::LOCALE_CHANGE);
+
+// auth
 Route::get('/login', [AuthController::class, 'login'])->name(WebRoute::AUTH_LOGIN);
 Route::post('/login', [AuthController::class, 'loginPost'])->name(WebRoute::AUTH_LOGIN_POST);
 Route::get('/register', [AuthController::class, 'register'])->name(WebRoute::AUTH_REGISTER);
