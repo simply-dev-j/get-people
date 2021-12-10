@@ -1,0 +1,33 @@
+// Initialize fonts
+@import 'fonts';
+
+@import 'variable';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+body {
+    background-color: $body-bg;
+}
+
+.form-input {
+    border-radius: 0px !important;
+    margin-bottom: 0.5em;
+    padding: 10px;
+    border-color: lightgray;
+    border-width: 2px;
+}
+
+.btn {
+    border-radius: 0px !important;
+    margin-bottom: 0.5em;
+    padding: 10px;
+    border-width: 2px;
+}
+
+.card {
+    border-radius: 0px !important;
+    margin-bottom: 0.5em;
+}
+
+

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\WebRoute;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +16,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
+
+Route::get('/login', [AuthController::class, 'login'])->name(WebRoute::AUTH_LOGIN);
+Route::post('/login', [AuthController::class, 'loginPost'])->name(WebRoute::AUTH_LOGIN_POST);
+Route::get('/register', [AuthController::class, 'register'])->name(WebRoute::AUTH_REGISTER);
+Route::post('/register', [AuthController::class, 'registerPost'])->name(WebRoute::AUTH_REGISTER_POST);
