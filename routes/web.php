@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HomeController;
 use App\WebRoute;
 use Illuminate\Support\Facades\Route;
 
@@ -28,7 +29,17 @@ Route::any('/locale/{locale}', function($locale) {
 })->name(WebRoute::LOCALE_CHANGE);
 
 // auth
-Route::get('/login', [AuthController::class, 'login'])->name(WebRoute::AUTH_LOGIN);
-Route::post('/login', [AuthController::class, 'loginPost'])->name(WebRoute::AUTH_LOGIN_POST);
-Route::get('/register', [AuthController::class, 'register'])->name(WebRoute::AUTH_REGISTER);
-Route::post('/register', [AuthController::class, 'registerPost'])->name(WebRoute::AUTH_REGISTER_POST);
+Route::middleware('guest')->group(function() {
+    Route::get('/login', [AuthController::class, 'login'])->name(WebRoute::AUTH_LOGIN);
+    Route::post('/login', [AuthController::class, 'loginPost'])->name(WebRoute::AUTH_LOGIN_POST);
+    Route::get('/register', [AuthController::class, 'register'])->name(WebRoute::AUTH_REGISTER);
+    Route::post('/register', [AuthController::class, 'registerPost'])->name(WebRoute::AUTH_REGISTER_POST);
+});
+
+Route::middleware('auth')->group(function() {
+    Route::get('/home', [HomeController::class, 'index'])->name(WebRoute::HOME_INDEX);
+
+    Route::any('/code', [HomeController::class, 'codeIndex'])->name(WebRoute::CODE_INDEX);
+    Route::any('/code/create', [HomeController::class, 'createCode'])->name(WebRoute::CODE_CREATE);
+});
+

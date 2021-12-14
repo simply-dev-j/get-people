@@ -16,6 +16,7 @@
     </script>
 
     <script src="{{ mix('js/vendor.js') }}"></script>
+    <script src="{{ mix('js/app.js') }}"></script>
 
     @stack('post-header-scripts')
 
@@ -40,6 +41,13 @@
     @show
 
     <script>
-        $('#flash-overlay-modal').modal();
+        window.addEventListener('load', function(E) {
+            $('#flash-overlay-modal').modal();
+
+            // enable tooltip
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            });
+        })
     </script>
 </body>
