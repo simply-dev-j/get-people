@@ -12,4 +12,12 @@ class InviteCode extends Model
     protected $fillable = [
         'code'
     ];
+
+    /**
+     * Get user of this code
+     */
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

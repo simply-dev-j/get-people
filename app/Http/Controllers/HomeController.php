@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\LocaleConstants;
+use App\Models\InviteCode;
 use Illuminate\Http\Request;
 use Str;
 
@@ -46,6 +48,18 @@ class HomeController extends Controller
         ]);
 
         $request->session()->flash('code', $code);
+
+        return redirect()->back();
+    }
+
+    /**
+     * Delete code
+     */
+    public function deleteCode(Request $request, InviteCode $code)
+    {
+        $code->delete();
+
+        flash(__(LocaleConstants::MESSAGE_BASE.LocaleConstants::MESSAGE_CODE_DELETED))->success();
 
         return redirect()->back();
     }

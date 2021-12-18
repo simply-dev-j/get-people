@@ -6,7 +6,7 @@
             <div class="row">
                 <div class="col-6">
                     <div class="stat-item-title">
-                        Pending
+                        {{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_HOME_PENDING) }}
                     </div>
                     <div class="stat-item-value">
                         {{ auth()->user()->pending }}
@@ -14,7 +14,7 @@
                 </div>
                 <div class="col-6">
                     <div class="stat-item-title">
-                        Released
+                        {{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_HOME_RELEASED) }}
                     </div>
                     <div class="stat-item-value">
                         {{ auth()->user()->released }}
@@ -22,9 +22,9 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-12 right">
-                    <a>See Transactions</a>
+            <div class="row mt-2">
+                <div class="col-12 text-right">
+                    {{-- <a class="stat-action">Transactions</a> --}}
                 </div>
             </div>
         </div>

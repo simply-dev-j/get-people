@@ -10,7 +10,9 @@
 
 <div class="row">
     <div class="col-12 col-lg-4 col-md-6 col-sm-6">
-        <a class="form-input btn btn-outline-primary w-100" href="{{route(App\WebRoute::CODE_CREATE)}}">Create New Code</a>
+        <a class="form-input btn btn-outline-primary w-100" href="{{route(App\WebRoute::CODE_CREATE)}}">
+            {{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_HOME_CREATE_NEW_CODE) }}
+        </a>
     </div>
 </div>
 

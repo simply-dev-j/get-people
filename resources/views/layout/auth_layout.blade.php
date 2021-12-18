@@ -3,8 +3,8 @@
 
 @section('content')
 
-    <div class="col h-100 d-flex align-items-center">
-        <div class="card card-body">
+    <div class="col d-flex align-items-center">
+        <div class="card card-body mt-5">
             @include('partials.validation-error')
             @include('flash::message')
 

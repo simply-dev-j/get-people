@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\TestController;
 use App\WebRoute;
 use Illuminate\Support\Facades\Route;
 
@@ -37,9 +38,19 @@ Route::middleware('guest')->group(function() {
 });
 
 Route::middleware('auth')->group(function() {
+    // auth
+    Route::any('/logout', [AuthController::class, 'logout'])->name(WebRoute::AUTH_LOGOUT);
+
+    // home
     Route::get('/home', [HomeController::class, 'index'])->name(WebRoute::HOME_INDEX);
 
+    // code
     Route::any('/code', [HomeController::class, 'codeIndex'])->name(WebRoute::CODE_INDEX);
     Route::any('/code/create', [HomeController::class, 'createCode'])->name(WebRoute::CODE_CREATE);
+    Route::delete('/code/delete/{code}', [HomeController::class, 'deleteCode'])->name(WebRoute::CODE_DELETE);
 });
+
+
+// This is just for test route
+Route::any('/test/registration/{user}', [TestController::class, 'testPerformRegistration']);
 

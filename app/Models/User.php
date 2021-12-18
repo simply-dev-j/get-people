@@ -42,8 +42,40 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+     * Get all invite codes of user.
+     */
     public function invite_codes()
     {
         return $this->hasMany(InviteCode::class);
+    }
+
+    /**
+     * Get owner of user. who generate invitation code for this person.
+     */
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    /**
+     * Get all people of person
+     */
+    public function people()
+    {
+        return $this->hasMany(User::class, 'owner_id', 'id');
+    }
+
+    /**
+     * Get entry of user
+     */
+    public function entry()
+    {
+        return $this->hasOne(Entry::class);
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
     }
 }

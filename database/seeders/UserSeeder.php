@@ -21,11 +21,14 @@ class UserSeeder extends Seeder
 
         if($env == 'local') {
             if (User::where('email', 'quan.dev@outlook.com')->first() == null) {
-                User::create([
+                $user = User::create([
                     'email' => 'quan.dev@outlook.com',
                     'name' => '一诺',
-                    'password' => Hash::make('quan.dev@outlook.com'),
-                    'stage' => 0
+                    'password' => Hash::make('quan.dev@outlook.com')
+                ]);
+
+                $user->entry()->create([
+                    'stage' => 1
                 ]);
             }
         } else {

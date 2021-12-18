@@ -10,6 +10,7 @@ class WebRoute {
     public const AUTH_LOGIN_POST = 'auth.login.post';
     public const AUTH_REGISTER = 'auth.register';
     public const AUTH_REGISTER_POST = 'auth.register.post';
+    public const AUTH_LOGOUT = 'auth.logout';
 
     // home
     public const HOME_INDEX = 'home.index';
@@ -17,4 +18,5 @@ class WebRoute {
     // code
     public const CODE_INDEX = 'home.code.index';
     public const CODE_CREATE = 'home.code.create';
+    public const CODE_DELETE = 'home.code.delete';
 }

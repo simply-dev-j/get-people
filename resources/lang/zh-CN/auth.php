@@ -1,5 +1,7 @@
 <?php
 
+use App\LocaleConstants;
+
 return [
 
     /*
@@ -12,9 +14,8 @@ return [
     | these language lines according to your application's requirements.
     |
     */
-
-    'failed' => 'These credentials do not match our records.',
-    'password' => 'The provided password is incorrect.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
-
+    LocaleConstants::AUTH_FAIL => '用户名或密码错误。',
+    LocaleConstants::AUTH_PASSWORD =>'密码错误。',
+    LocaleConstants::AUTH_THROTTLE =>'您尝试的登录次数过多，请 :seconds 秒后再试。',
+    LocaleConstants::AUTH_INVALID_CODE =>'Invalid code',
 ];

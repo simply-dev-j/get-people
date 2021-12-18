@@ -24,7 +24,6 @@ class CreateUsersTable extends Migration
 
             // Additional fields
             $table->bigInteger('owner_id')->unsigned()->nullable(true);
-            $table->integer('stage')->unsigned();
 
             $table->foreign('owner_id')->references('id')->on('users')->onUpdate('cascade');
         });

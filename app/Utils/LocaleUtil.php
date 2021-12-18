@@ -3,10 +3,10 @@
 namespace App\Utils;
 
 class LocaleUtil {
-    public static $locales= ['cn', 'en'];
+    public static $locales= ['zh-CN', 'en'];
 
     public static $localeTitles = [
-        'cn' => '中文',
+        'zh-CN' => '中文',
         'en' => 'En'
     ];
 

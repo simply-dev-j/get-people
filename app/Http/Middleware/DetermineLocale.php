@@ -21,9 +21,11 @@ class DetermineLocale
         if (LocaleUtil::isValidLocale($locale)) {
             session(['locale' => $locale]);
             \App::setLocale($locale);
+            \Carbon\Carbon::setLocale($locale);
         } else {
             session(['locale' => config('app.fallback_locale')]);
             \App::setLocale(config('app.fallback_locale'));
+            \Carbon\Carbon::setLocale(config('app.fallback_locale'));
         }
 
         return $next($request);

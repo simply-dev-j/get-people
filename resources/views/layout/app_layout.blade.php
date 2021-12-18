@@ -34,7 +34,7 @@
         <div class="app-body min-vh-100" id="app-body">
             @include('navbar.navbar')
 
-            <div class="app-content container" id="app-content">
+            <div class="app-content container min-h-100" id="app-content">
                 @yield('content')
             </div>
         </div>
