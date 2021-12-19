@@ -32,7 +32,17 @@ class UserSeeder extends Seeder
                 ]);
             }
         } else {
+            if (User::where('email', 'admin@mail.com')->first() == null) {
+                $user = User::create([
+                    'email' => 'admin@mail.com',
+                    'name' => '一诺',
+                    'password' => Hash::make('admin@mail.com')
+                ]);
 
+                $user->entry()->create([
+                    'stage' => 1
+                ]);
+            }
         }
     }
 }
