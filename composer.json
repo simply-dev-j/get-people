@@ -12,8 +12,7 @@
         "laravel-lang/lang": "~7.0",
         "laravel/framework": "^8.65",
         "laravel/sanctum": "^2.11",
-        "laravel/tinker": "^2.5",
-        "overtrue/laravel-lang": "~3.0"
+        "laravel/tinker": "^2.5"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
