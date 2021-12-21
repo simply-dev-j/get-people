@@ -10,6 +10,28 @@
 
 body {
     background-color: $body-bg;
+    font-size: $default-font-size;
+
+    .auth-layout {
+        background-image: url('/img/background.jpg');
+        background-position: top;
+        background-repeat: no-repeat;
+        background-size: cover;
+
+        .auth-card {
+            max-width: 400px;
+        }
+
+        .navbar-container {
+            .navbar {
+                background: none;
+            }
+        }
+    }
+}
+
+.app-body {
+    background-color: rgba(0,0,0,0.5);
 }
 
 // customization of bootstrap default
@@ -18,20 +40,45 @@ body {
     border-radius: 0px !important;
     margin-bottom: 0.5em;
     padding: 10px;
-    border-color: lightgray;
-    border-width: 2px;
+    border: none;
+    background-color: #d8af48;
+    color: white;
+    &:focus {
+        outline: 2px solid darken(#d8af48, 20);
+        background-color: #d8af48;
+        color: white;
+    }
 }
 
 .btn {
     border-radius: 0px !important;
     margin-bottom: 0.5em;
     padding: 10px;
-    border-width: 2px;
+    border: none;
+    background-color: #d8af48;
+    &:focus {
+        background-color: #d8af48;
+    }
 }
 
 .card {
     border-radius: 0px !important;
     margin-bottom: 0.5em;
+    background-color: rgba(0,0,0,0.5);
+    color: white;
+}
+
+label {
+    color: white;
+    font-size: 12px;
+}
+
+a {
+    color: white;
+}
+
+hr {
+    border-color: grey;
 }
 
 // pagination
@@ -63,7 +110,7 @@ ul.pagination  {
         height: $navbar-height;
         padding: 10px;
 
-        background-color: $body-bg;
+        background-color: black;
 
         .avatar {
             img{
@@ -76,6 +123,7 @@ ul.pagination  {
             }
             span {
                 font-weight: bold;
+                color: white;
             }
         }
 
@@ -92,7 +140,7 @@ ul.pagination  {
                     font-weight: bold;
 
                     img {
-                        border: 2px solid gray;
+                        outline: 2px solid #d8af48;
                     }
                 }
 
@@ -106,7 +154,7 @@ ul.pagination  {
     }
 
     .navbar-collapse {
-        background-color: $body-bg;
+        background-color: black;
         border-bottom: 2px lightgray solid;
 
         .navbar-collapse-item {
@@ -122,35 +170,28 @@ ul.pagination  {
 }
 
 .app-content {
-    padding-top: 80px;
+    padding-top: $navbar-height + 10px;
 }
 
 .stat {
     display: flex;
     margin-bottom: 1em;
     padding: 15px;
-
-    &.stat-money {
-        background-color: lightgray;
-        border: 2px solid darken($color: lightgray, $amount: 10);
-    }
-
-    &.stat-people {
-        background-color: lightgray;
-        border: 2px solid darken($color: lightgray, $amount: 10);
-    }
+    background-color: rgba(0,0,0,0.5);
 
     .stat-content {
         flex-grow: 1;
 
         .stat-item-title {
             text-align: center;
+            color: #d8af48;
         }
 
         .stat-item-value {
             text-align: center;
             font-weight: bold;
             font-size: 20px;
+            color: white;
         }
     }
 
@@ -165,4 +206,16 @@ ul.pagination  {
     }
 }
 
+// flash
+.alert {
+    background-color: rgba(0,0,0,0.5);
+    border: none;
+    color: white;
 
+    ul {
+        list-style-type: none;
+        color: white;
+        padding: 0px;
+        font-size: 12px;
+    }
+}

@@ -40,9 +40,9 @@
                     </label>
                     <div>
                         <b>{{ $code->code }}</b>
-                        <button type="button" class="close" onclick="copyToClipboard('{{ $code->code }}')"
+                        <button type="button" class="btn close" onclick="copyToClipboard('{{ $code->code }}')"
                             data-toggle="tooltip" data-placement="bottom" title="{{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_HOME_CODE_COPIED) }}" data-trigger="'click'">
-                            <span class="fa fa-copy fa-sm"></span>
+                            <span class="fa fa-copy fa-sm" style="color: white"></span>
                         </button>
                     </div>
                 </div>

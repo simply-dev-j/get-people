@@ -16134,26 +16134,68 @@ readers do not read off random characters that represent icons */
 
 body {
   background-color: #f4f1de;
+  font-size: 12px;
+}
+body .auth-layout {
+  background-image: url("/img/background.jpg");
+  background-position: top;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+body .auth-layout .auth-card {
+  max-width: 400px;
+}
+body .auth-layout .navbar-container .navbar {
+  background: none;
+}
+
+.app-body {
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .form-input {
   border-radius: 0px !important;
   margin-bottom: 0.5em;
   padding: 10px;
-  border-color: lightgray;
-  border-width: 2px;
+  border: none;
+  background-color: #d8af48;
+  color: white;
+}
+.form-input:focus {
+  outline: 2px solid #997721;
+  background-color: #d8af48;
+  color: white;
 }
 
 .btn {
   border-radius: 0px !important;
   margin-bottom: 0.5em;
   padding: 10px;
-  border-width: 2px;
+  border: none;
+  background-color: #d8af48;
+}
+.btn:focus {
+  background-color: #d8af48;
 }
 
 .card {
   border-radius: 0px !important;
   margin-bottom: 0.5em;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+}
+
+label {
+  color: white;
+  font-size: 12px;
+}
+
+a {
+  color: white;
+}
+
+hr {
+  border-color: grey;
 }
 
 ul.pagination li {
@@ -16177,7 +16219,7 @@ ul.pagination li.disabled {
   display: flex;
   height: 80px;
   padding: 10px;
-  background-color: #f4f1de;
+  background-color: black;
 }
 .navbar-container .navbar .avatar img {
   height: 100%;
@@ -16189,6 +16231,7 @@ ul.pagination li.disabled {
 }
 .navbar-container .navbar .avatar span {
   font-weight: bold;
+  color: white;
 }
 .navbar-container .navbar .language {
   display: flex;
@@ -16203,7 +16246,7 @@ ul.pagination li.disabled {
   font-weight: bold;
 }
 .navbar-container .navbar .language .language-item.active img {
-  border: 2px solid gray;
+  outline: 2px solid #d8af48;
 }
 .navbar-container .navbar .language .language-item img {
   border-radius: 50%;
@@ -16211,7 +16254,7 @@ ul.pagination li.disabled {
   height: 30px;
 }
 .navbar-container .navbar-collapse {
-  background-color: #f4f1de;
+  background-color: black;
   border-bottom: 2px lightgray solid;
 }
 .navbar-container .navbar-collapse .navbar-collapse-item {
@@ -16223,32 +16266,27 @@ ul.pagination li.disabled {
 }
 
 .app-content {
-  padding-top: 80px;
+  padding-top: 90px;
 }
 
 .stat {
   display: flex;
   margin-bottom: 1em;
   padding: 15px;
-}
-.stat.stat-money {
-  background-color: lightgray;
-  border: 2px solid #bababa;
-}
-.stat.stat-people {
-  background-color: lightgray;
-  border: 2px solid #bababa;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 .stat .stat-content {
   flex-grow: 1;
 }
 .stat .stat-content .stat-item-title {
   text-align: center;
+  color: #d8af48;
 }
 .stat .stat-content .stat-item-value {
   text-align: center;
   font-weight: bold;
   font-size: 20px;
+  color: white;
 }
 .stat .stat-action {
   font-size: 12px;
@@ -16257,4 +16295,16 @@ ul.pagination li.disabled {
 .stat img {
   width: 60px;
   height: 60px;
+}
+
+.alert {
+  background-color: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: white;
+}
+.alert ul {
+  list-style-type: none;
+  color: white;
+  padding: 0px;
+  font-size: 12px;
 }

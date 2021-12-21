@@ -30,7 +30,7 @@
     </label>
     <input type="password" name="confirm_password" id="confirm_password" class="form-control form-input" value="">
 
-    <button type="submit" class="form-control btn btn-primary">
+    <button type="submit" class="form-control btn btn-primary mt-3">
         {{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_REGISTER) }}
     </button>
 
