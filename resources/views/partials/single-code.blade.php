@@ -16,15 +16,6 @@
     <div class="collapse" id="code-body-{{ $code->id }}">
         <div class="card-body">
             <div class="row">
-                @if ($code->accepted)
-                <div class="col-12 mb-2">
-                    <label class="text-success">
-                        <span class="fa fa-check"></span>
-                        Accepted
-                    </label>
-                </div>
-                @endif
-
                 <div class="col-12 mb-2">
                     <label>
                         {{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_CODE_CREATE_AT) }}
@@ -40,9 +31,9 @@
                     </label>
                     <div>
                         <b>{{ $code->code }}</b>
-                        <button type="button" class="btn close" onclick="copyToClipboard('{{ $code->code }}')"
+                        <button type="button" class="btn btn-action" style="color: white" onclick="copyToClipboard('{{ $code->code }}'); showTooltip(event);"
                             data-toggle="tooltip" data-placement="bottom" title="{{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_HOME_CODE_COPIED) }}" data-trigger="'click'">
-                            <span class="fa fa-copy fa-sm" style="color: white"></span>
+                            &#x2398;
                         </button>
                     </div>
                 </div>

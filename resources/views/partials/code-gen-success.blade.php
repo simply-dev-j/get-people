@@ -12,9 +12,9 @@
         </div>
         <div class="toast-body">
             {{Session::get('code')}}
-            <button type="button" class="ml-2 mb-1 close" onclick="copyToClipboard('{{Session::get('code')}}')"
+            <button type="button" class="btn btn-action" style="color: black" onclick="copyToClipboard('{{ Session::get('code') }}'); showTooltip(event);"
                 data-toggle="tooltip" data-placement="bottom" title="{{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_HOME_CODE_COPIED) }}" data-trigger="'click'">
-                <span class="fa fa-copy"></span>
+                &#x2398;
             </button>
         </div>
     </div>

@@ -10,7 +10,8 @@ class InviteCode extends Model
     use HasFactory;
 
     protected $fillable = [
-        'code'
+        'code',
+        'accepted'
     ];
 
     /**

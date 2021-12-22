@@ -16177,6 +16177,16 @@ body .auth-layout .navbar-container .navbar {
 .btn:focus {
   background-color: #d8af48;
 }
+.btn.btn-action {
+  float: right;
+  background: none;
+  padding: 0px;
+}
+.btn.btn-action:focus {
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
 
 .card {
   border-radius: 0px !important;

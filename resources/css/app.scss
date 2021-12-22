@@ -59,6 +59,17 @@ body {
     &:focus {
         background-color: #d8af48;
     }
+
+    &.btn-action {
+        float: right;
+        background: none;
+        padding: 0px;
+        &:focus {
+            border: none;
+            outline: none;
+            box-shadow: none;
+        }
+    }
 }
 
 .card {
