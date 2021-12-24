@@ -43,10 +43,45 @@ body {
     border: none;
     background-color: #d8af48;
     color: white;
+    font-size: $default-font-size;
+    min-height: 38px;
     &:focus {
-        outline: 2px solid darken(#d8af48, 20);
+        outline: none;
+        background-color: #d8af48;
+        box-shadow: none;
+        color: white;
+    }
+    &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+        color: lightgray;
+        opacity: 1; /* Firefox */
+    }
+
+    &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+        color: lightgray;
+    }
+
+    &::-ms-input-placeholder { /* Microsoft Edge */
+        color: lightgray;
+    }
+}
+
+.input-group-prepend {
+    border: none;
+    border-radius: 0px;
+    background-color: #d8af48;
+
+    .input-group-text{
+        border: none;
+        border-radius: 0px;
         background-color: #d8af48;
         color: white;
+    }
+
+    &::after {
+        content: '';
+        width: 2px;
+        background-color: white;
+        margin: 0.35rem 0px;
     }
 }
 
@@ -56,6 +91,9 @@ body {
     padding: 10px;
     border: none;
     background-color: #d8af48;
+    font-size: $default-font-size;
+    min-height: 38px;
+
     &:focus {
         background-color: #d8af48;
     }

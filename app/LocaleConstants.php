@@ -18,6 +18,7 @@ class LocaleConstants {
     public const FORM_AUTH_LOGIN = 'form_auth_login';
     public const FORM_AUTH_REGISTER = 'form_auth_register';
     public const FORM_AUTH_LOGOUT = 'form_auth_logout';
+    public const FORM_AUTH_SECURITY_CODE = 'form_auth_security_code';
 
     public const FORM_HOME = 'form_home';
     public const FORM_HOME_PENDING = 'form_home_pending';

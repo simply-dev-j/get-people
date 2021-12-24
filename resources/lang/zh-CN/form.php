@@ -4,11 +4,12 @@ return [
     App\LocaleConstants::FORM_AUTH_EMAIL => '邮件',
     App\LocaleConstants::FORM_AUTH_PASSWORD => '密码',
     App\LocaleConstants::FORM_AUTH_CODE => '推荐码',
-    App\LocaleConstants::FORM_AUTH_NAME => '名字',
+    App\LocaleConstants::FORM_AUTH_NAME => '用户名',
     App\LocaleConstants::FORM_AUTH_CONFIRM_PASSWORD => '确认密码',
     App\LocaleConstants::FORM_AUTH_LOGIN => '登录',
     App\LocaleConstants::FORM_AUTH_REGISTER => '注册',
     App\LocaleConstants::FORM_AUTH_LOGOUT => '退出',
+    App\LocaleConstants::FORM_AUTH_SECURITY_CODE => '安全码',
 
     App\LocaleConstants::FORM_HOME => '第一页',
     App\LocaleConstants::FORM_HOME_PENDING => '挂账',

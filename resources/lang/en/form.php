@@ -9,6 +9,7 @@ return [
     App\LocaleConstants::FORM_AUTH_LOGIN => 'Login',
     App\LocaleConstants::FORM_AUTH_REGISTER => 'Register',
     App\LocaleConstants::FORM_AUTH_LOGOUT => 'Logout',
+    App\LocaleConstants::FORM_AUTH_SECURITY_CODE => 'Security Code',
 
     App\LocaleConstants::FORM_HOME => 'Home',
     App\LocaleConstants::FORM_HOME_PENDING => 'Pending',

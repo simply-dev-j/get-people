@@ -3,42 +3,69 @@
 
 @section('form-content')
 
-<form action="{{route(App\WebRoute::AUTH_REGISTER_POST)}}" method="POST">
+<form class="m-0" action="{{route(App\WebRoute::AUTH_REGISTER_POST)}}" method="POST">
     @method('POST')
-    <label for="code">
-        {{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_CODE) }}
-    </label>
-    <input type="text" name="code" id="code" class="form-control form-input" value="{{old('code')}}">
 
-    <label for="name">
-        {{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_NAME) }}
-    </label>
-    <input type="text" name="name" id="name" class="form-control form-input" value="{{old('name')}}">
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">@</span>
+        </div>
+        <input type="text" name="code" id="code" class="form-control form-input" value="{{old('code')}}"
+        placeholder="{{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_CODE) }}">
+    </div>
 
-    <label for="email">
+    <div class="input-group mt-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">
+                <i class="fa fa-user"></i>
+            </span>
+        </div>
+        <input type="text" name="name" id="name" class="form-control form-input" value="{{old('name')}}"
+        placeholder="{{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_NAME) }}">
+    </div>
+
+    {{-- <label for="email">
         {{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_EMAIL) }}
     </label>
-    <input type="text" name="email" id="email" class="form-control form-input" value="{{old('email')}}">
+    <input type="text" name="email" id="email" class="form-control form-input" value="{{old('email')}}"> --}}
 
-    <label for="password">
-        {{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_PASSWORD) }}
-    </label>
-    <input type="password" name="password" id="password" class="form-control form-input" value="">
+    <div class="input-group mt-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">
+                <i class="fa fa-key"></i>
+            </span>
+        </div>
+        <input name="security_code" id="security_code" class="form-control form-input" value="{{old('security_code')}}"
+        placeholder="{{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_SECURITY_CODE) }}">
+    </div>
 
-    <label for="confirm_password">
-        {{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_CONFIRM_PASSWORD) }}
-    </label>
-    <input type="password" name="confirm_password" id="confirm_password" class="form-control form-input" value="">
+    <div class="input-group mt-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">
+                <i class="fa fa-lock"></i>
+            </span>
+        </div>
+        <input type="password" name="password" id="password" class="form-control form-input" value=""
+        placeholder="{{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_PASSWORD) }}">
+    </div>
 
-    <button type="submit" class="form-control btn btn-primary mt-3">
+    <div class="input-group mt-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">
+                <i class="fa fa-lock"></i>
+            </span>
+        </div>
+        <input type="password" name="confirm_password" id="confirm_password" class="form-control form-input" value=""
+        placeholder="{{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_CONFIRM_PASSWORD) }}">
+    </div>
+
+    <button type="submit" class="form-control btn btn-primary mt-3 mb-0">
         {{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_REGISTER) }}
     </button>
 
-    <div class="text-center">
-        <a href="{{route(App\WebRoute::AUTH_LOGIN)}}">
-            {{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_LOGIN) }}
-        </a>
-    </div>
+    <a class="form-control btn btn-primary mt-3 mb-0" href="{{route(App\WebRoute::AUTH_LOGIN)}}">
+        {{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_LOGIN) }}
+    </a>
 
 </form>
 

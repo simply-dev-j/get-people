@@ -35,11 +35,11 @@ class AuthController extends Controller
     public function loginPost(Request $request)
     {
         $request->validate([
-            'email' => 'required|email|min:3|max:255',
+            'name' => 'required|max:255',
             'password' => 'required|min:1|max:255'
         ]);
 
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only('name', 'password');
 
         if (Auth::attempt($credentials)) {
             return redirect()->intended('home');
@@ -65,8 +65,9 @@ class AuthController extends Controller
     {
         $validated = $request->validate([
             'code' => 'required',
-            'name' => 'required|min:3|max:255',
-            'email' => 'required|email|min:3|max:255|unique:users,email',
+            'name' => 'required|min:3|max:255|unique:users,name',
+            'security_code' => 'required',
+            // 'email' => 'required|email|min:3|max:255|unique:users,email',
             'password' => 'required|max:255|same:confirm_password',
         ]);
 

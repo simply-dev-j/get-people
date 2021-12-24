@@ -16160,11 +16160,58 @@ body .auth-layout .navbar-container .navbar {
   border: none;
   background-color: #d8af48;
   color: white;
+  font-size: 12px;
+  min-height: 38px;
 }
 .form-input:focus {
-  outline: 2px solid #997721;
+  outline: none;
+  background-color: #d8af48;
+  box-shadow: none;
+  color: white;
+}
+.form-input::-moz-placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: lightgray;
+  opacity: 1;
+  /* Firefox */
+}
+.form-input:-ms-input-placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: lightgray;
+  opacity: 1;
+  /* Firefox */
+}
+.form-input::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: lightgray;
+  opacity: 1;
+  /* Firefox */
+}
+.form-input:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: lightgray;
+}
+.form-input::-ms-input-placeholder {
+  /* Microsoft Edge */
+  color: lightgray;
+}
+
+.input-group-prepend {
+  border: none;
+  border-radius: 0px;
+  background-color: #d8af48;
+}
+.input-group-prepend .input-group-text {
+  border: none;
+  border-radius: 0px;
   background-color: #d8af48;
   color: white;
+}
+.input-group-prepend::after {
+  content: "";
+  width: 2px;
+  background-color: white;
+  margin: 0.35rem 0px;
 }
 
 .btn {
@@ -16173,6 +16220,8 @@ body .auth-layout .navbar-container .navbar {
   padding: 10px;
   border: none;
   background-color: #d8af48;
+  font-size: 12px;
+  min-height: 38px;
 }
 .btn:focus {
   background-color: #d8af48;

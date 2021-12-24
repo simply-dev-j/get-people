@@ -141,7 +141,7 @@ return [
         'minute'                => '分',
         'mobile'                => '手机',
         'month'                 => '月',
-        'name'                  => '名称',
+        'name'                  => '用户名',
         'password'              => '密码',
         'password_confirmation' => '确认密码',
         'phone'                 => '电话',
@@ -153,5 +153,6 @@ return [
         'username'              => '用户名',
         'year'                  => '年',
         'code'                  => '推荐码',
+        'security_code'         => '安全码'
     ],
 ];
