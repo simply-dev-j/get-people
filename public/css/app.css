@@ -16136,6 +16136,13 @@ body {
   background-color: #f4f1de;
   font-size: 12px;
 }
+body.sb-sidenav-toggled .sidebar {
+  width: 50vw;
+}
+body .sidebar {
+  width: 0px;
+  transition: ease-out all 0.3s;
+}
 body .auth-layout {
   background-image: url("/img/background.jpg");
   background-position: top;
@@ -16151,6 +16158,13 @@ body .auth-layout .navbar-container .navbar {
 
 .app-body {
   background-color: rgba(0, 0, 0, 0.5);
+}
+
+.footer {
+  position: fixed;
+  width: 100%;
+  bottom: 20px;
+  text-align: center;
 }
 
 .form-input {
@@ -16326,6 +16340,7 @@ ul.pagination li.disabled {
 
 .app-content {
   padding-top: 90px;
+  padding-bottom: 20px;
 }
 
 .stat {

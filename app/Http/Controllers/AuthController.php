@@ -41,6 +41,8 @@ class AuthController extends Controller
 
         $credentials = $request->only('name', 'password');
 
+        Auth::logout();
+
         if (Auth::attempt($credentials)) {
             return redirect()->intended('home');
         } else {
@@ -69,6 +71,8 @@ class AuthController extends Controller
             'security_code' => 'required',
             // 'email' => 'required|email|min:3|max:255|unique:users,email',
             'password' => 'required|max:255|same:confirm_password',
+            'username' => 'required|max:255',
+            'phone' => 'nullable'
         ]);
 
         // check if code is already used
@@ -88,6 +92,8 @@ class AuthController extends Controller
 
         $user = $inviteCode->owner->people()->create($validated);
 
+        $inviteCode->user()->save($user);
+
         /*
             TODO: Need to add actions of people invitation.
 
@@ -95,7 +101,7 @@ class AuthController extends Controller
             2. Determine the stage of new user and transformation of owner's stage.
             3. Calculation of money; pending and release
         */
-        PeopleUtil::updateEntry($user);
+        // PeopleUtil::updateEntry($user);
 
         return redirect(route(WebRoute::AUTH_LOGIN))->withInput();
     }
@@ -109,5 +115,71 @@ class AuthController extends Controller
         }
 
         return redirect(route(WebRoute::AUTH_LOGIN));
+    }
+
+    public function profile(Request $request)
+    {
+        return view('auth_profile');
+    }
+
+    public function profilePost(Request $request)
+    {
+        $validated = $request->validate([
+            'id_number' => 'nullable'
+        ]);
+
+        auth()->user()->update($validated);
+
+        return redirect()->back()->withInput();
+    }
+
+    public function bank()
+    {
+        return view('auth_bank');
+    }
+
+    public function bankPost(Request $request)
+    {
+        $validated = $request->validate([
+            'bank' => 'required',
+            'bank_number' => 'nullable',
+            'bank_address' => 'nullable'
+        ]);
+
+        auth()->user()->update($validated);
+
+        flash('银行信息更新成功', 'success');
+
+        return redirect()->back()->withInput();
+    }
+
+    public function resetPassword()
+    {
+        return view('auth_reset_password');
+    }
+
+    public function resetPasswordPost(Request $request)
+    {
+        $validated = $request->validate([
+            'old_password' => 'required',
+            'password' => 'required|same:confirm_password'
+        ]);
+
+        if(!Hash::check($validated['old_password'], auth()->user()->password)) {
+            flash('错误密码', 'danger');
+            return redirect()->back();
+        }
+
+        auth()->user()->update([
+            'password' => Hash::make($request['password'])
+        ]);
+
+        flash('密码已更新', 'success');
+        return redirect()->back();
+    }
+
+    public function phone()
+    {
+        return view('auth_phone');
     }
 }

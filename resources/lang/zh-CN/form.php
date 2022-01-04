@@ -17,7 +17,7 @@ return [
     App\LocaleConstants::FORM_HOME_TOTAL_CODE => '总',
     App\LocaleConstants::FORM_HOME_ACCEPTED_CODE => '已注册',
     App\LocaleConstants::FORM_HOME_VIEW_ALL => '列表',
-    App\LocaleConstants::FORM_HOME_CREATE_NEW_CODE => '创建推荐码',
+    App\LocaleConstants::FORM_HOME_CREATE_NEW_CODE => '生成推荐码',
     App\LocaleConstants::FORM_HOME_CODE_GEN_SUC => '推荐码生成成功',
     App\LocaleConstants::FORM_HOME_CODE_COPIED => '已复制',
 

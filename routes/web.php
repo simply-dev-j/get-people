@@ -1,7 +1,11 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CenterController;
+use App\Http\Controllers\FundController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TestController;
 use App\WebRoute;
 use Illuminate\Support\Facades\Route;
@@ -48,6 +52,46 @@ Route::middleware('auth')->group(function() {
     Route::any('/code', [HomeController::class, 'codeIndex'])->name(WebRoute::CODE_INDEX);
     Route::any('/code/create', [HomeController::class, 'createCode'])->name(WebRoute::CODE_CREATE);
     Route::delete('/code/delete/{code}', [HomeController::class, 'deleteCode'])->name(WebRoute::CODE_DELETE);
+
+    // team management
+    Route::prefix('team')->group(function() {
+        Route::any('/', [TeamController::class, 'index'])->name(WebRoute::TEAM_INDEX);
+        Route::any('/net/{user?}', [TeamController::class, 'netIndex'])->name(WebRoute::TEAM_NET);
+    });
+
+    // center
+    Route::prefix('center')->group(function() {
+        Route::any('/', [CenterController::class, 'index'])->name(WebRoute::CENTER_INDEX);
+        Route::get('/register', [CenterController::class, 'register'])->name(WebRoute::CENTER_REGISTER);
+        Route::post('/register', [CenterController::class, 'registerPost'])->name(WebRoute::CENTER_REGISTER_POST);
+    });
+
+    // fund
+    Route::prefix('fund')->group(function() {
+        Route::get('/conversion', [FundController::class, 'conversionIndex'])->name(WebRoute::FUND_CONVERSION_INDEX);
+        Route::post('/conversion', [FundController::class, 'conversionPost'])->name(WebRoute::FUND_CONVERSION_POST);
+        Route::get('/transfer', [FundController::class, 'transferIndex'])->name(WebRoute::FUND_TRANSFER_INDEX);
+        Route::post('/transfer', [FundController::class, 'transferPost'])->name(WebRoute::FUND_TRANSFER_POST);
+        Route::get('/withdraw', [FundController::class, 'withdraw'])->name(WebRoute::FUND_WITHDRAW_INDEX);
+    });
+
+    // profile
+    Route::prefix('auth')->group(function() {
+        Route::get('/profile', [AuthController::class, 'profile'])->name(WebRoute::AUTH_PROFILE);
+        Route::post('/profile', [AuthController::class, 'profilePost'])->name(WebRoute::AUTH_PROFILE_POST);
+        Route::get('/bank', [AuthController::class, 'bank'])->name(WebRoute::AUTH_BANK);
+        Route::post('/bank', [AuthController::class, 'bankPost'])->name(WebRoute::AUTH_BANK_POST);
+        Route::get('/reset-password', [AuthController::class, 'resetPassword'])->name(WebRoute::AUTH_RESET_PASSWORD);
+        Route::post('/reset-password', [AuthController::class, 'resetPasswordPost'])->name(WebRoute::AUTH_RESET_PASSWORD_POST);
+        Route::any('/phone', [AuthController::class, 'phone'])->name(WebRoute::AUTH_PHONE);
+    });
+
+    // admin
+    Route::prefix('admin')->group(function() {
+        Route::get('/user', [AdminController::class, 'userIndex'])->name(WebRoute::ADMIN_USER_INDEX);
+        Route::any('/user/{user}/activate', [AdminController::class, 'userActivate'])->name(WebRoute::ADMIN_USER_ACTIVATE);
+        Route::any('/user/{user}/inactivate', [AdminController::class, 'userInactivate'])->name(WebRoute::ADMIN_USER_INACTIVATE);
+    });
 });
 
 

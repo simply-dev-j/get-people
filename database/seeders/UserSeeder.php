@@ -20,11 +20,14 @@ class UserSeeder extends Seeder
         $env = env('APP_ENV', 'local');
 
         if($env == 'local') {
-            if (User::where('email', 'quan.dev@outlook.com')->first() == null) {
+            if (User::where('name', 'root')->first() == null) {
                 $user = User::create([
-                    'email' => 'quan.dev@outlook.com',
-                    'name' => '一诺',
-                    'password' => Hash::make('quan.dev@outlook.com')
+                    'name' => 'root',
+                    'username' => 'root',
+                    'is_admin' => true,
+                    'security_code' => '111',
+                    'active' => true,
+                    'password' => Hash::make('123456')
                 ]);
 
                 $user->entry()->create([
@@ -32,11 +35,14 @@ class UserSeeder extends Seeder
                 ]);
             }
         } else {
-            if (User::where('email', 'admin@mail.com')->first() == null) {
+            if (User::where('name', 'root')->first() == null) {
                 $user = User::create([
-                    'email' => 'admin@mail.com',
-                    'name' => '一诺',
-                    'password' => Hash::make('admin@mail.com')
+                    'name' => 'root',
+                    'username' => 'root',
+                    'is_admin' => true,
+                    'security_code' => '111',
+                    'active' => true,
+                    'password' => Hash::make('123456')
                 ]);
 
                 $user->entry()->create([

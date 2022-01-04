@@ -38,6 +38,32 @@ class PeopleUtil {
 
     }
 
+    public static function getNet(User $user)
+    {
+        $net = [null, null, null, null, null, null, null];
+
+        $superEntry = self::findSuperEntryOfGroup($user->entry);
+        $index = 0;
+
+        $net[$index] = $superEntry->user;
+
+        $index ++;
+
+        foreach($superEntry->sub_entries as $subEntry) {
+            $net[$index] = $subEntry->user;
+            $index ++;
+        }
+
+        foreach($superEntry->sub_entries as $subEntry) {
+            foreach($subEntry->sub_entries as $subSubEntry) {
+                $net[$index] = $subSubEntry->user;
+                $index ++;
+            }
+        }
+
+        return $net;
+    }
+
     // Private logic
 
     /**
@@ -115,29 +141,28 @@ class PeopleUtil {
 
         }
 
-        // add money to pending
-        $moneyReceivableUser->increment('pending', ConfigUtil::AMOUNT_OF_ONE());
-        $moneyReceivableUser->transactions()->create([
-            'type' => TransactionUtil::TRANSACTION_TYPE_ADD_PENDING,
-            'amount' => ConfigUtil::AMOUNT_OF_ONE()
-        ]);
+        switch($subEntryCount + 1) {
+            case 2:
+            case 4:
+            case 6:
+                $moneyReceivableUser->increment('released', ConfigUtil::AMOUNT_OF_ONE() * 2);
+                $moneyReceivableUser->increment('pending', ConfigUtil::AMOUNT_OF_ONE() * 2);
+                $moneyReceivableUser->increment('money_by_invitation', ConfigUtil::AMOUNT_OF_ONE() * 2);
+                break;
+        }
 
         // add new entry to group
         $parentEntry->sub_entries()->save($entry);
+        $entry->parent_user_id = $parentEntry->user->id;
+        $entry->save();
 
         // finalize
+        // if net is full.
         if ( $subEntryCount + 1 == 6 ) {
-            $super_entry->user->increment('released', ConfigUtil::AMOUNT_OF_ONE() * 2);
-            $super_entry->user->transactions()->create([
-                'type' => TransactionUtil::TRANSACTION_TYPE_RELEASE,
-                'amount' => ConfigUtil::AMOUNT_OF_ONE() * 2
-            ]);
 
-            $super_entry->user->increment('pending', ConfigUtil::AMOUNT_OF_UP_STAGE());
-            $super_entry->user->transactions()->create([
-                'type' => TransactionUtil::TRANSACTION_TYPE_ADD_PENDING,
-                'amount' => ConfigUtil::AMOUNT_OF_UP_STAGE()
-            ]);
+            $super_entry->user->increment('released', ConfigUtil::AMOUNT_OF_UP_STAGE());
+            $super_entry->user->increment('money_by_step', ConfigUtil::AMOUNT_OF_UP_STAGE());
+            $super_entry->user->increment('step', 1);
 
             $super_entry_user = $super_entry->user;
 
@@ -146,6 +171,13 @@ class PeopleUtil {
                 self::upgradeEntryStageOfUser($super_entry_user);
                 return true;
             } else {
+                // check if sibling is already finished in same stage.
+                // if so previous parent should be paid.
+                if ($super_entry->getSibling() == null) {
+                    $super_entry->parent_user->increment('released', ConfigUtil::AMOUNT_OF_ONE() * 2);
+                    $super_entry->parent_user->increment('money_by_child_release', ConfigUtil::AMOUNT_OF_ONE() * 2);
+                }
+
                 self::deleteEntry($super_entry);
 
                 // add new entry for super_entry_user because we already deleted entry of him/her
@@ -191,5 +223,11 @@ class PeopleUtil {
         }
 
         return $total;
+    }
+
+    private static function transferMoneyFromPendingToReleased(User $user, $amount)
+    {
+        $user->decrement('pending', $amount);
+        $user->increment('released', $amount);
     }
 }

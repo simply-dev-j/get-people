@@ -1,0 +1,44 @@
+table.t_info {
+  width: 175px;
+  background: #f1370c;
+  border-collapse: collapse;
+  border: 1px solid #f1370c;
+  margin: 1px;
+}
+table.t_info th {
+  color: #FFF;
+  text-align: center;
+  height: 25px;
+  line-height: 25px;
+  border-top: 0;
+  border: 1px solid #f1370c;
+  background: none;
+}
+table.t_info td {
+  height: 20px;
+  background: #FFFFFF;
+  text-align: center;
+  border: 1px solid #f1370c;
+  line-height: 20px;
+}
+
+table {
+  white-space: nowrap;
+}
+
+.card-body {
+  overflow: scroll;
+}
+
+.content-wrapper {
+  height: auto;
+}
+
+li.page-link.disabled {
+  color: lightgray;
+}
+
+li.page-link.active {
+  color: white;
+  background-color: #007bff;
+}

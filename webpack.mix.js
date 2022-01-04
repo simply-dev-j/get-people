@@ -19,9 +19,13 @@ mix
         'node_modules/@fortawesome/fontawesome-free/js/all.js'
     ], 'public/js/vendor.js')
     .scripts([
-        'resources/js/app.js'
+        'resources/js/app.js',
+        'resources/js/scripts.js'
     ], 'public/js/app.js')
 
     .sass('resources/css/app.scss', 'public/css', [
+        //
+    ])
+    .sass('resources/css/extension.scss', 'public/css', [
         //
     ]);

@@ -36,7 +36,12 @@
 
 
 </form>
+@endsection
 
+@section('footer')
+<div class="footer">
+    <a href="https://beian.miit.gov.cn" target="_blank">辽ICP备2021013768号</a>
+</div>
 @endsection
 
 

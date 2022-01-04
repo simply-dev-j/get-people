@@ -27,4 +27,14 @@ class Entry extends Model
     {
         return $this->hasMany(Entry::class, 'owner_id')->where('stage', $this->stage);;
     }
+
+    public function parent_user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function getSibling()
+    {
+        return $this->parent_user()->where('stage', $this->stage)->whereNotIn('id', [$this->id])->first();
+    }
 }

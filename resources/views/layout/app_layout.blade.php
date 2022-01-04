@@ -17,37 +17,55 @@
 
     <script src="{{ mix('js/vendor.js') }}"></script>
     <script src="{{ mix('js/app.js') }}"></script>
+    <script src="{{ asset('js/adminlte.min.js') }}"></script>
 
     @stack('post-header-scripts')
 
     {{-- Styles --}}
     @stack('pre-styles')
-    <link href="{{ mix('/css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/adminlte.min.css') }}" rel="stylesheet">
+    <link href="{{ mix('/css/extension.css') }}" rel="stylesheet">
     @stack('post-styles')
 
     <link rel="shortcut icon" href="/img/logo_header_{{ app()->getLocale() }}.png"/>
-
 </head>
 
-<body>
-    @section('app-body')
-        <div class="app-body min-vh-100 @stack('post-body-class')" id="app-body">
+<body class="hold-transition sidebar-mini layout-fixed ">
+    <div class="wrapper">
+        @if ( auth()->user()->active )
+            <!-- Top nav bar -->
             @include('navbar.navbar')
 
-            <div class="app-content container min-h-100" id="app-content">
-                @yield('content')
+            @include('navbar.aside_nav')
+
+            <!-- Content Wrapper. Contains page content -->
+            <div class="content-wrapper">
+                <!-- Main content -->
+                <section class="content-header">
+                    @yield('content-header')
+                </section>
+
+                <section class="content">
+                    @include('partials.flash_message')
+                </section>
+
+                <section class="content">
+                    @yield('content')
+                </section>
             </div>
-        </div>
-    @show
+        @else
+            <div class="container pt-5">
+                <div class="alert alert-danger alert-dismissible">
+                    <i class="icon fas fa-ban"></i>
+                    登录尚未授权.
 
-    <script>
-        window.addEventListener('load', function(E) {
-            $('#flash-overlay-modal').modal();
+                    <a class=" btn btn-primary btn-sm float-right" style="text-decoration: none" href="{{ route(App\WebRoute::AUTH_LOGOUT) }}">
+                        安全退出
+                    </a>
+                </div>
+            </div>
+        @endif
+    </div>
 
-            // enable tooltip
-            $(function () {
-                $('[data-toggle="tooltip"]').tooltip()
-            });
-        })
-    </script>
+    @stack('post-body-scripts')
 </body>

@@ -12,6 +12,17 @@ body {
     background-color: $body-bg;
     font-size: $default-font-size;
 
+    &.sb-sidenav-toggled {
+        .sidebar {
+            width: 50vw;
+        }
+    }
+
+    .sidebar {
+        width: 0px;
+        transition: ease-out all 0.3s;
+    }
+
     .auth-layout {
         background-image: url('/img/background.jpg');
         background-position: top;
@@ -32,6 +43,13 @@ body {
 
 .app-body {
     background-color: rgba(0,0,0,0.5);
+}
+
+.footer {
+    position: fixed;
+    width: 100%;
+    bottom: 20px;
+    text-align: center;
 }
 
 // customization of bootstrap default
@@ -220,6 +238,7 @@ ul.pagination  {
 
 .app-content {
     padding-top: $navbar-height + 10px;
+    padding-bottom: 20px;
 }
 
 .stat {
@@ -268,3 +287,4 @@ ul.pagination  {
         font-size: 12px;
     }
 }
+

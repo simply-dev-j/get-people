@@ -21,7 +21,18 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'security_code'
+        'security_code',
+        'id_number',
+        'phone',
+        'username',
+        'bank',
+        'bank_number',
+        'bank_address',
+        'active',
+        'is_admin',
+        'money_by_invitation',
+        'money_by_step',
+        'money_by_child_release'
     ];
 
     /**
@@ -43,12 +54,24 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $with = [
+        'owner'
+    ];
+
     /**
      * Get all invite codes of user.
      */
     public function invite_codes()
     {
         return $this->hasMany(InviteCode::class);
+    }
+
+    /**
+     * Get the invite code which is used to register.
+     */
+    public function invite_code()
+    {
+        return $this->belongsTo(InviteCode::class);
     }
 
     /**
@@ -79,4 +102,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Transaction::class);
     }
+
+    public function center()
+    {
+        return $this->hasOne(Center::class);
+    }
+
 }

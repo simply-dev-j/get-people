@@ -24,6 +24,26 @@
         placeholder="{{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_NAME) }}">
     </div>
 
+    <div class="input-group mt-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">
+                <i class="fa fa-user"></i>
+            </span>
+        </div>
+        <input type="text" name="username" id="username" class="form-control form-input" value="{{old('username')}}"
+        placeholder="账号">
+    </div>
+
+    <div class="input-group mt-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">
+                <i class="fa fa-user"></i>
+            </span>
+        </div>
+        <input type="text" name="phone" id="phone" class="form-control form-input" value="{{old('phone')}}"
+        placeholder="手机">
+    </div>
+
     {{-- <label for="email">
         {{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_EMAIL) }}
     </label>

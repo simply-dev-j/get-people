@@ -1,8 +1,8 @@
-<div class="navbar-container">
+{{-- <div class="navbar-container">
     <div class="navbar">
         <div class="avatar">
             @auth
-            <img src="{{asset('img/avatar.png')}}" class="avatar">
+            <img src="{{asset('/img/avatar.png')}}" class="avatar">
             <span>{{Auth()->user()->name}}</span>
             @endauth
         </div>
@@ -21,5 +21,15 @@
         </div>
     </div>
     @include('navbar.partials.navbar_collapse')
-</div>
+</div> --}}
 
+<!-- Navbar -->
+<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+    </ul>
+  </nav>
+  <!-- /.navbar -->

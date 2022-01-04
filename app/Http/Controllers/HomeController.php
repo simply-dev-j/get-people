@@ -17,7 +17,14 @@ class HomeController extends Controller
 
     public function index()
     {
-        return view('home');
+        $acceptedCount = auth()->user()->invite_codes()
+            ->where('accepted', true)
+            ->whereHas('user', function ($query) {
+                $query->where('active', 1);
+            })
+            ->count();
+
+        return view('home', ['acceptedCount' => $acceptedCount]);
     }
 
     /**
@@ -27,9 +34,9 @@ class HomeController extends Controller
     {
         $page = $request->get('page');
 
-        $codes = auth()->user()->invite_codes()->orderBy('created_at', 'desc')->paginate('20');
+        $codes = auth()->user()->invite_codes()->orderBy('created_at', 'desc')->paginate(20);
 
-        return view('code_index', [
+        return view('home_code', [
             'codes' => $codes
         ]);
     }
