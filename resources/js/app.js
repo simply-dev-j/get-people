@@ -38,6 +38,17 @@ function copyToClipboard(data) {
 }
 
 function showTooltip(e) {
+    $('[data-toggle=tooltip]').tooltip('hide')
     e.target.focus();
-    $(e.target).tooltip('show')
+    $(e.target).closest('[data-toggle=tooltip]').tooltip('show')
 }
+
+$(document).ready(function() {
+    $('[role=form-submit]').click(function (e) {
+        e.preventDefault();
+
+        const target = $(this).attr('target-form');
+
+        $(target).submit();
+    })
+})

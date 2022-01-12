@@ -7,7 +7,7 @@ use App\Models\User;
 
 class PeopleUtil {
 
-    public static function updateEntry(User $user)
+    public static function updateEntry(User $user, ?Entry $superEntryDefault = null)
     {
         // reset user's entry first
         self::deleteEntry($user->entry);
@@ -26,7 +26,12 @@ class PeopleUtil {
          *     / \ / \
          *    o  o o  o
          */
-        $superEntry = self::findSuperEntryOfGroup($ownerEntry);
+
+        $superEntry = $superEntryDefault;
+
+        if ($superEntryDefault == null) {
+            $superEntry = self::findSuperEntryOfGroup($ownerEntry);
+        }
 
         /**
          * Do action of adding new entry
@@ -62,6 +67,31 @@ class PeopleUtil {
         }
 
         return $net;
+    }
+
+    public static function getBelongedMember(User $user)
+    {
+        $net = self::getNet($user);
+
+        $index = 0;
+        foreach($net as $i => $net_element)
+        {
+            if(isset($net_element) && $net_element->id == $user->id)
+            {
+                $index = $i;
+                break;
+            }
+        }
+
+        if ($index == 0) {
+            return [$net[1], $net[2]];
+        } else if($index == 1) {
+            return [$net[5], $net[6]];
+        } else if($index == 2) {
+            return [$net[3], $net[4]];
+        } else {
+            return [];
+        }
     }
 
     // Private logic
@@ -141,11 +171,16 @@ class PeopleUtil {
 
         }
 
+        /**
+         * When new user comes, owner get money direclty.
+         */
+        $moneyReceivableUser->increment('released', ConfigUtil::AMOUNT_OF_ONE());
+
         switch($subEntryCount + 1) {
             case 2:
             case 4:
             case 6:
-                $moneyReceivableUser->increment('released', ConfigUtil::AMOUNT_OF_ONE() * 2);
+
                 $moneyReceivableUser->increment('pending', ConfigUtil::AMOUNT_OF_ONE() * 2);
                 $moneyReceivableUser->increment('money_by_invitation', ConfigUtil::AMOUNT_OF_ONE() * 2);
                 break;
@@ -174,7 +209,7 @@ class PeopleUtil {
                 // check if sibling is already finished in same stage.
                 // if so previous parent should be paid.
                 if ($super_entry->getSibling() == null) {
-                    $super_entry->parent_user->increment('released', ConfigUtil::AMOUNT_OF_ONE() * 2);
+                    self::transferMoneyFromPendingToReleased($super_entry->parent_user, ConfigUtil::AMOUNT_OF_ONE() * 2);
                     $super_entry->parent_user->increment('money_by_child_release', ConfigUtil::AMOUNT_OF_ONE() * 2);
                 }
 

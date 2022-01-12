@@ -89,8 +89,13 @@ Route::middleware('auth')->group(function() {
     // admin
     Route::prefix('admin')->group(function() {
         Route::get('/user', [AdminController::class, 'userIndex'])->name(WebRoute::ADMIN_USER_INDEX);
-        Route::any('/user/{user}/activate', [AdminController::class, 'userActivate'])->name(WebRoute::ADMIN_USER_ACTIVATE);
+        Route::post('/user', [AdminController::class, 'userCreate'])->name(WebRoute::ADMIN_USER_CREATE);
+
+        Route::post('/user/activate_in_net', [AdminController::class, 'userActivateInSpecNet'])->name(WebRoute::ADMIN_USER_ACTIVATE_IN_SPEC_NET);
+        Route::post('/user/activate', [AdminController::class, 'userActivate'])->name(WebRoute::ADMIN_USER_ACTIVATE);
         Route::any('/user/{user}/inactivate', [AdminController::class, 'userInactivate'])->name(WebRoute::ADMIN_USER_INACTIVATE);
+        Route::delete('/user/{user}/delete', [AdminController::class, 'userDelete'])->name(WebRoute::ADMIN_USER_DELETE);
+        Route::get('/user/validate-name', [AdminController::class, 'validateName'])->name(WebRoute::ADMIN_USER_VALIDATE_NAME);
     });
 });
 

@@ -21,6 +21,7 @@ class FundController extends Controller
         ]);
 
         auth()->user()->released -= $request['conversion_amount'];
+        auth()->user()->withdrawn += number_format($request['conversion_amount'] * 0.8, 2);
         auth()->user()->save();
 
         flash('转账成功', 'success');

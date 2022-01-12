@@ -23,7 +23,13 @@
             <tbody>
                 @foreach ($codes as $code)
                     <tr>
-                        <td> {{ $code->code }} </td>
+                        <td>
+                            {{ $code->code }}
+                            <button type="button" class="btn btn-action" onclick="copyToClipboard('{{ $code->code }}'); showTooltip(event);"
+                                data-toggle="tooltip" data-placement="bottom" title="{{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_HOME_CODE_COPIED) }}" data-trigger="'click'">
+                                <i class="fa fa-copy"></i>
+                            </button>
+                        </td>
                         <td> {{ $code->created_at }} </td>
                         <td> {{ $code->user->name ?? '' }} </td>
                         <td> {{ $code->user->username ?? '' }} </td>

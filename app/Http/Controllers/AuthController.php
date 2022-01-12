@@ -72,7 +72,8 @@ class AuthController extends Controller
             // 'email' => 'required|email|min:3|max:255|unique:users,email',
             'password' => 'required|max:255|same:confirm_password',
             'username' => 'required|max:255',
-            'phone' => 'nullable'
+            'phone' => 'nullable',
+            'id_number' => 'required|max:255'
         ]);
 
         // check if code is already used

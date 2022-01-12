@@ -45,6 +45,10 @@ class WebRoute {
 
     // admin
     public const ADMIN_USER_INDEX = 'admin.user.index';
+    public const ADMIN_USER_CREATE = 'admin.user.create';
     public const ADMIN_USER_ACTIVATE = 'admin.user.activate';
+    public const ADMIN_USER_ACTIVATE_IN_SPEC_NET = 'admin.user.activate.in.spec.net';
     public const ADMIN_USER_INACTIVATE = 'admin.user.inactivate';
+    public const ADMIN_USER_DELETE = 'admin.user.delete';
+    public const ADMIN_USER_VALIDATE_NAME = 'admin.user.validate.name';
 }

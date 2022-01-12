@@ -153,6 +153,7 @@ return [
         'username'              => '账号',
         'year'                  => '年',
         'code'                  => '推荐码',
-        'security_code'         => '安全码'
+        'security_code'         => '安全码',
+        'id_number'             => '身份证号码'
     ],
 ];

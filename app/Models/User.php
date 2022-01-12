@@ -32,7 +32,8 @@ class User extends Authenticatable
         'is_admin',
         'money_by_invitation',
         'money_by_step',
-        'money_by_child_release'
+        'money_by_child_release',
+        'withdrawn'
     ];
 
     /**

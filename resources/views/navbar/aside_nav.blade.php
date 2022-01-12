@@ -57,7 +57,7 @@
                         <li class="nav-item">
                             <a href="{{ route(App\WebRoute::TEAM_INDEX) }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>推荐列表</p>
+                                <p>报单目录</p>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -69,7 +69,7 @@
                     </ul>
                 </li>
                 {{-- Center --}}
-                @if (auth()->user()->is_admin)
+                {{-- @if (auth()->user()->is_admin)
                     <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-copy"></i>
@@ -79,12 +79,12 @@
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
-                            {{-- <li class="nav-item">
+                            <li class="nav-item">
                                 <a href="{{ route(App\WebRoute::CENTER_REGISTER) }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>报单中心</p>
                                 </a>
-                            </li> --}}
+                            </li>
                             <li class="nav-item">
                                 <a href="{{ route(App\WebRoute::CENTER_INDEX) }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
@@ -93,7 +93,7 @@
                             </li>
                         </ul>
                     </li>
-                @endif
+                @endif --}}
                 {{-- Fund --}}
                 <li class="nav-item">
                     <a href="#" class="nav-link">
