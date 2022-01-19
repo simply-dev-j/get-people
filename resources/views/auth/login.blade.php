@@ -40,7 +40,19 @@
 
 @section('footer')
 <div class="footer">
-    <a href="https://beian.miit.gov.cn" target="_blank">辽ICP备2021013768号</a>
+    <div>
+        <a href="https://beian.miit.gov.cn" target="_blank">辽ICP备2021013768号</a>
+    </div>
+
+    <div>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=21060302000299" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;">
+            <img src="{{asset('img/police_logo.png')}}" style="float:left;"/>
+            <p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:white;">
+                辽公网安备 21060302000299号
+            </p>
+        </a>
+    </div>
+
 </div>
 @endsection
 

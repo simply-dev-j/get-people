@@ -16,7 +16,7 @@ class AddInviteCodeToUsersTable extends Migration
         Schema::table('users', function (Blueprint $table) {
             //
             $table->bigInteger('invite_code_id')->unsigned()->nullable();
-            $table->foreign('invite_code_id')->on('invite_codes')->references('id')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('invite_code_id', 'invite_code_to_user')->on('invite_codes')->references('id')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
@@ -29,6 +29,7 @@ class AddInviteCodeToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             //
+            $table->dropForeign('invite_code_to_user');
         });
     }
 }

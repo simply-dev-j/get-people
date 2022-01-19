@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Utils\TransactionUtil;
 use Illuminate\Http\Request;
 
 class FundController extends Controller
@@ -20,9 +21,34 @@ class FundController extends Controller
             'conversion_amount' => 'required|numeric'
         ]);
 
-        auth()->user()->released -= $request['conversion_amount'];
-        auth()->user()->withdrawn += number_format($request['conversion_amount'] * 0.8, 2);
-        auth()->user()->save();
+        $amount = $request->get('conversion_amount');
+
+        switch($validated['conversion_method']) {
+            case 1:
+                // released_from_pending to release
+                auth()->user()->released_from_pending -= $amount;
+                auth()->user()->released += number_format($amount * 0.8, 2);
+                auth()->user()->save();
+
+                TransactionUtil::CRETE_TRANSACTION(
+                    auth()->user(),
+                    TransactionUtil::TRANSACTION_MONEY_RELEASE_FROM_PENDING_TO_RELEASE,
+                    $amount
+                );
+                break;
+            case 2:
+                // release to withdrawn
+                auth()->user()->released -= $amount;
+                auth()->user()->withdrawn += $amount;
+                auth()->user()->save();
+
+                TransactionUtil::CRETE_TRANSACTION(
+                    auth()->user(),
+                    TransactionUtil::TRANSACTION_MONEY_RELEASE_TO_WITHDRAWN,
+                    $amount
+                );
+                break;
+        }
 
         flash('转账成功', 'success');
 
@@ -49,14 +75,37 @@ class FundController extends Controller
             return redirect()->back()->withInput();
         }
 
+        // if receiver is not a sub-company
+        if ($receiver->id > 3) {
+            flash('注册积分只能由个人转给分公司', 'danger');
+            return redirect()->back()->withInput();
+        }
+
         // securify code is wrong
         if(auth()->user()->security_code != $validated['security_code']) {
             flash('错误安全码', 'danger');
             return redirect()->back()->withInput();
         }
 
-        $receiver->increment('released', $validated['transfer_amount']);
-        auth()->user()->decrement('released', $validated['transfer_amount']);
+        $amount = $validated['transfer_amount'];
+
+        $receiver->increment('withdrawn', $validated['transfer_amount']);
+        auth()->user()->decrement('withdrawn', $validated['transfer_amount']);
+
+        TransactionUtil::CRETE_TRANSACTION(
+            auth()->user(),
+            TransactionUtil::TRANSACTION_MONEY_WITHDRAWN_SEND,
+            $amount,
+            $receiver
+        );
+
+        TransactionUtil::CRETE_TRANSACTION(
+            $receiver,
+            TransactionUtil::TRANSACTION_MONEY_WITHDRAWN_RECEIVE,
+            $amount,
+            auth()->user()
+        );
+
 
         flash('转移成功', 'success');
         return redirect()->back();

@@ -33,7 +33,8 @@ class User extends Authenticatable
         'money_by_invitation',
         'money_by_step',
         'money_by_child_release',
-        'withdrawn'
+        'withdrawn',
+        'released_from_pending'
     ];
 
     /**

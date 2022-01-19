@@ -23,7 +23,7 @@ class CreateCenterTable extends Migration
 
             $table->bigInteger('user_id')->unsigned();
 
-            $table->foreign('user_id')->on('users')->references('id')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('user_id','center_user_id_foreign')->on('users')->references('id')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
@@ -34,6 +34,10 @@ class CreateCenterTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('membership');
+        Schema::table('center', function(Blueprint $table) {
+            $table->dropForeign('center_user_id_foreign');
+        });
+
+        Schema::dropIfExists('center');
     }
 }

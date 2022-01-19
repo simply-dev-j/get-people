@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ChangeEmailOptionalToUsersTable extends Migration
+class AddMoneyTypeToTransactionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class ChangeEmailOptionalToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('transactions', function (Blueprint $table) {
             //
-            $table->string('email')->nullable(true)->change();
+            $table->integer('money_type')->nullable(true);
         });
     }
 
@@ -26,9 +26,9 @@ class ChangeEmailOptionalToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('transactions', function (Blueprint $table) {
             //
-            // $table->string('email')->nullable(false)->change();
+            $table->dropColumn('money_type');
         });
     }
 }

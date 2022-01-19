@@ -70,4 +70,16 @@ class HomeController extends Controller
 
         return redirect()->back();
     }
+
+    public function transactionIndex(Request $request)
+    {
+        $type = $request->get('type');
+
+        $transactions = auth()->user()->transactions()->where('type', $type)->orderBy('id', 'desc')->paginate(20);
+
+        return view('home_transaction', [
+            'transactions' => $transactions,
+            'type' => $type
+        ]);
+    }
 }

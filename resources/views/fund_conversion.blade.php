@@ -22,12 +22,13 @@
                         <label>转换类型</label>
                         <select class="custom-select" id="conversion_method" name="conversion_method">
                             <option class="d-none" disabled selected value>请选择</option>
-                            <option value="1">购车积分转购物积分(税费20%)</option>
+                            <option value="1">购车积分转换成购物积分（税费20%）</option>
+                            <option value="2">购物积分转换成注册积分（无税费）</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>账户余额</label>
-                        <input type="text"class="form-control" readonly value="{{ auth()->user()->released }}">
+                        <input type="text"class="form-control" readonly id="max_amount" value="0">
                     </div>
                     <div class="form-group">
                         <label for="conversion_amount">转换金额</label>
@@ -58,7 +59,9 @@
             },
           conversion_amount: {
             required: true,
-            max: {{ auth()->user()->released }},
+            max: function() {
+                return parseInt($('#max_amount').val());
+            },
             min: 0,
             digits: true
           },
@@ -86,7 +89,20 @@
         }
       });
     });
-    </script>
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#conversion_method').on('change', function() {
+            const method = $(this).val()
+            if (method == 1) {
+                $('#max_amount').val({{ auth()->user()->released_from_pending }})
+            } else if(method == 2) {
+                $('#max_amount').val({{ auth()->user()->released }})
+            }
+        })
+    })
+</script>
 @endpush
 
 

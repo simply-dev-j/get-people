@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ChangeEmailOptionalToUsersTable extends Migration
+class AddReleasedFromPendingToUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,7 +15,7 @@ class ChangeEmailOptionalToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             //
-            $table->string('email')->nullable(true)->change();
+            $table->integer('released_from_pending')->default(0);
         });
     }
 
@@ -28,7 +28,7 @@ class ChangeEmailOptionalToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             //
-            // $table->string('email')->nullable(false)->change();
+            $table->dropColumn('released_from_pending');
         });
     }
 }

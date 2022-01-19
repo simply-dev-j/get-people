@@ -16,7 +16,7 @@
 
         <div class="card-header">
             <div class="callout callout-info bg-primary">
-                <p>推荐会员：总共有 {{ count($people) }} 条记录</p>
+                <p>推荐会员：总共有 {{ $people->total() }} 条记录</p>
             </div>
         </div>
 

@@ -53,6 +53,11 @@ Route::middleware('auth')->group(function() {
     Route::any('/code/create', [HomeController::class, 'createCode'])->name(WebRoute::CODE_CREATE);
     Route::delete('/code/delete/{code}', [HomeController::class, 'deleteCode'])->name(WebRoute::CODE_DELETE);
 
+    // transaction
+    Route::prefix('transaction')->group(function() {
+        Route::any('/', [HomeController::class, 'transactionIndex'])->name(WebRoute::TRANSACTION_INDEX);
+    });
+
     // team management
     Route::prefix('team')->group(function() {
         Route::any('/', [TeamController::class, 'index'])->name(WebRoute::TEAM_INDEX);

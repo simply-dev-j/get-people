@@ -32,6 +32,11 @@ class CreateInviteCodesTable extends Migration
      */
     public function down()
     {
+        Schema::table('invite_codes', function (Blueprint $table) {
+            //
+            $table->dropForeign('invite_codes_user_id_foreign');
+        });
+
         Schema::dropIfExists('invite_codes');
     }
 }

@@ -66,10 +66,10 @@
                                     <div class="btn-group">
                                         <a class="btn btn-primary btn-sm" href="#" data-toggle="modal" data-target="#modal-user-active"
                                             onclick="document.getElementById('selected_user_for_active').value={{$member->id}}">激活</a>
-                                        <a class="btn btn-danger btn-sm" href="#" role="form-submit" target-form="#member_delete_form_{{$member->id}}">拒绝</a>
+                                        <a class="btn btn-danger btn-sm" href="#" role="form-submit" target-form="#member_delete_form_{{$member->id}}">删除</a>
                                         <a class="btn btn-secondary btn-sm" href="#" data-toggle="modal" data-target="#modal-user-register-special"
                                             onclick="document.getElementById('selected_user').value={{$member->id}}">
-                                            添加到另一个网体
+                                            选择分组
                                         </a>
                                     </div>
 

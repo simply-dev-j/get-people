@@ -27,6 +27,9 @@ class WebRoute {
     public const CODE_CREATE = 'home.code.create';
     public const CODE_DELETE = 'home.code.delete';
 
+    // transaction
+    public const TRANSACTION_INDEX = 'home.transaction.index';
+
     // team
     public const TEAM_INDEX = 'team.index';
     public const TEAM_NET = 'team.net';

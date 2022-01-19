@@ -11,6 +11,16 @@ class Transaction extends Model
 
     protected $fillable = [
         'type',
-        'amount'
+        'amount',
+        'current_amount',
+        'money_type'
     ];
+
+    public function reference_user() {
+        return $this->belongsTo(User::class);
+    }
+
+    public function reference_user2() {
+        return $this->belongsTo(User::class);
+    }
 }

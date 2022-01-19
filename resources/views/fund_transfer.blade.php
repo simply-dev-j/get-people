@@ -21,7 +21,7 @@
 
                     <div class="form-group">
                         <label>注册积分余额</label>
-                        <input type="text"class="form-control" readonly value="{{ auth()->user()->released }}">
+                        <input type="text"class="form-control" readonly value="{{ auth()->user()->withdrawn }}">
                     </div>
                     <div class="form-group">
                         <label for="transfer_receiver">对方会员账号</label>
@@ -60,7 +60,7 @@
             },
             transfer_amount: {
                 required: true,
-                max: {{ auth()->user()->released }},
+                max: {{ auth()->user()->withdrawn }},
                 min: 0
             },
             security_code: {

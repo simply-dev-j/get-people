@@ -33,8 +33,25 @@ class Entry extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function getSibling()
+    public function getSiblingEntry()
     {
-        return $this->parent_user()->where('stage', $this->stage)->whereNotIn('id', [$this->id])->first();
+        if ($this->sibling == null) {
+            return null;
+        }
+
+        $siblingEntry = $this->sibling->entry;
+
+        if ($siblingEntry->stage == $this->stage) {
+            return $siblingEntry;
+        } else {
+            return null;
+        }
+
+        // return $this->parent_user()->people()->where('stage', $this->stage)->whereNotIn('id', [$this->id])->first();
+    }
+
+    public function sibling()
+    {
+        return $this->belongsTo(User::class);
     }
 }
