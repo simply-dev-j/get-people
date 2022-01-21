@@ -7,6 +7,7 @@ use App\Models\User;
 
 class TransactionUtil
 {
+    public const TYPE_ALL = 0x00;
     public const TYPE_PENDDING= 0x01;
     public const TYPE_RELEASE= 0x02;
     public const TYPE_RELEASED_FROM_PENDING= 0x04;
@@ -16,6 +17,7 @@ class TransactionUtil
     public const TRANSACTION_MONEY_BY_REGISTRATION_OF_TWO = 0x02;
     public const TRANSACTION_MONEY_BY_TWO_LEAVE = 0x03;
     public const TRANSACTION_MONEY_BY_MOVE_NET = 0x04;
+    public const TRANSACTION_MONEY_BY_MOVE_NET_CROSS = 0x05;
     // public const TRANSACTION_MONEY_BY_WITHDRAWN = 0x05;
     public const TRANSACTION_MONEY_RELEASE_FROM_PENDING_TO_RELEASE = 0x06;
     public const TRANSACTION_MONEY_RELEASE_TO_WITHDRAWN = 0x07;
@@ -46,6 +48,11 @@ class TransactionUtil
                 break;
             case self::TRANSACTION_MONEY_BY_MOVE_NET:
                 $transaction = self::CREATE_TRASANCTION_INSTANCE($user, self::TYPE_RELEASE, $amount, $user->released, $money_type);
+
+                self::APPLY_REF_USERS($transaction, $ref_user1, $ref_user2);
+                break;
+            case self::TRANSACTION_MONEY_BY_MOVE_NET:
+                $transaction = self::CREATE_TRASANCTION_INSTANCE($user, self::TYPE_RELEASED_FROM_PENDING, $amount, $user->released_from_pending, $money_type);
 
                 self::APPLY_REF_USERS($transaction, $ref_user1, $ref_user2);
                 break;

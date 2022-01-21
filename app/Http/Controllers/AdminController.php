@@ -23,13 +23,13 @@ class AdminController extends Controller
     public function userCreate(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|min:3|max:255|unique:users,name',
+            'name' => 'required|max:255|unique:users,name',
             'security_code' => 'required',
             // 'email' => 'required|email|min:3|max:255|unique:users,email',
             'password' => 'required|max:255|same:confirm_password',
             'username' => 'required|max:255',
             'phone' => 'nullable',
-            'id_number' => 'required|max:255'
+            // 'id_number' => 'required|max:255'
         ]);
 
         $validated = array_merge($validated, [
@@ -64,7 +64,7 @@ class AdminController extends Controller
 
             PeopleUtil::updateEntry($user);
 
-            flash('User is activated successfully', 'success');
+            flash('用户激活成功', 'success');
         }
 
         return redirect()->back()->withInput();

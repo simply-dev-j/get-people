@@ -68,6 +68,9 @@
                                         @case(App\Utils\TransactionUtil::TRANSACTION_MONEY_BY_MOVE_NET)
                                         离队奖金转换成购物积分
                                             @break
+                                        @case(App\Utils\TransactionUtil::TRANSACTION_MONEY_BY_MOVE_NET_CROSS)
+                                        登录奖金转换成购车积分 :
+                                            @break
                                         @case(App\Utils\TransactionUtil::TRANSACTION_MONEY_RELEASE_FROM_PENDING_TO_RELEASE)
                                         购车积分转换成购物积分
                                             @break
@@ -94,7 +97,26 @@
 
                         </td>
                         <td>{{ $transaction->amount > 0 ? '+' : '' }}{{ $transaction->amount }}</td>
-                        <td>{{ $transaction->current_amount }}</td>
+                        <td>
+                            @if ($type == App\Utils\TransactionUtil::TYPE_ALL)
+                                @switch($transaction->type)
+                                    @case(App\Utils\TransactionUtil::TYPE_RELEASE)
+                                    购物积分
+                                        @break
+                                    @case(App\Utils\TransactionUtil::TYPE_RELEASED_FROM_PENDING)
+                                    购车积分
+                                        @break
+                                    @case(App\Utils\TransactionUtil::TYPE_WITHDRAWN)
+                                    注册积分
+                                        @break
+
+                                    @default
+
+                                @endswitch
+                            :
+                            @endif
+                            {{ $transaction->current_amount }}
+                        </td>
                         <td>{{ $transaction->created_at }}</td>
                     </tr>
                 @endforeach

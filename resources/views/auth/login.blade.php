@@ -30,9 +30,9 @@
         {{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_LOGIN) }}
     </button>
 
-    <a class="form-control btn btn-primary mt-3 mb-0" href="{{route(App\WebRoute::AUTH_REGISTER)}}">
+    {{-- <a class="form-control btn btn-primary mt-3 mb-0" href="{{route(App\WebRoute::AUTH_REGISTER)}}">
         {{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_REGISTER) }}
-    </a>
+    </a> --}}
 
 
 </form>

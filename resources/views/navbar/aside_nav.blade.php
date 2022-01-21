@@ -25,7 +25,7 @@
                     </a>
                 </li>
                 {{-- Admin --}}
-                @if (auth()->user()->is_admin)
+                {{-- @if (auth()->user()->is_admin)
                     <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-copy"></i>
@@ -43,7 +43,7 @@
                             </li>
                         </ul>
                     </li>
-                @endif
+                @endif --}}
                 {{-- Team --}}
                 <li class="nav-item">
                     <a href="#" class="nav-link">
@@ -54,16 +54,24 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
+                        @if (auth()->user()->id <= 3) {{-- 분공사에만 유효 --}}
+                            <li class="nav-item">
+                                <a href="{{ route(App\WebRoute::TEAM_INDEX) }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>报单列表</p>
+                                </a>
+                            </li>
+                        @endif
                         <li class="nav-item">
-                            <a href="{{ route(App\WebRoute::TEAM_INDEX) }}" class="nav-link">
+                            <a href="{{ route(App\WebRoute::CODE_INDEX) }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>报单目录</p>
+                                <p>推荐列表</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route(App\WebRoute::TEAM_NET) }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>网体结构</p>
+                                <p>网体排列</p>
                             </a>
                         </li>
                     </ul>

@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\LocaleConstants;
+use App\Models\Entry;
 use App\Models\InviteCode;
+use App\Models\User;
+use App\Utils\TransactionUtil;
 use Illuminate\Http\Request;
 use Str;
 
@@ -32,12 +35,11 @@ class HomeController extends Controller
      */
     public function codeIndex(Request $request)
     {
-        $page = $request->get('page');
-
-        $codes = auth()->user()->invite_codes()->orderBy('created_at', 'desc')->paginate(20);
-
+        $people = auth()->user()->people()->paginate(20);
+        $nets = Entry::where('owner_id', null)->get();
         return view('home_code', [
-            'codes' => $codes
+            'people' => $people,
+            'nets' => $nets
         ]);
     }
 
@@ -75,7 +77,15 @@ class HomeController extends Controller
     {
         $type = $request->get('type');
 
-        $transactions = auth()->user()->transactions()->where('type', $type)->orderBy('id', 'desc')->paginate(20);
+        $query = auth()->user()->transactions();
+
+        if ($type != TransactionUtil::TYPE_ALL) {
+            $query = $query->where('type', $type);
+        }
+
+
+
+        $transactions = $query->orderBy('id', 'desc')->paginate(20);
 
         return view('home_transaction', [
             'transactions' => $transactions,

@@ -11,7 +11,7 @@
 @endsection
 
 @section('content')
-<div class="row">
+<div class="row px-3">
 
     <div class="col-lg-3 col-md-6 col-12">
         <!-- small box -->
@@ -68,25 +68,25 @@
     </div>
 
 
-    <div class="col-lg-3 col-md-6 col-6">
+    <div class="col-lg-3 col-md-6 col-12">
         <!-- small box -->
         <div class="small-box bg-info">
           <div class="inner">
             <h5>
-                {{ auth()->user()->pending }}
+                {{ auth()->user()->withdrawn + auth()->user()->released + auth()->user()->released_from_pending }}
             </h5>
-
-            <div class="text-sm">奖金累计</div>
+            {{-- 종합 --}}
+            <div class="text-sm">累计积分</div>
           </div>
           <div class="icon">
             <i class="ion ion-bag"></i>
           </div>
-          <a href="{{ route(App\WebRoute::TRANSACTION_INDEX, ['type' => App\Utils\TransactionUtil::TYPE_PENDDING]) }}" class="small-box-footer">查看明细  <i class="fas fa-arrow-circle-right"></i></a>
+          <a href="{{ route(App\WebRoute::TRANSACTION_INDEX, ['type' => App\Utils\TransactionUtil::TYPE_ALL]) }}" class="small-box-footer">查看明细  <i class="fas fa-arrow-circle-right"></i></a>
         </div>
       </div>
 
     <!-- ./col -->
-    <div class="col-lg-3 col-md-6 col-6">
+    {{-- <div class="col-lg-3 col-md-6 col-6">
       <!-- small box -->
       <div class="small-box bg-warning">
         <div class="inner">
@@ -103,6 +103,6 @@
         </div>
         <a href="{{ route(App\WebRoute::CODE_INDEX) }}" class="small-box-footer">查看明细  <i class="fas fa-arrow-circle-right"></i></a>
       </div>
-    </div>
+    </div> --}}
   </div>
 @endsection

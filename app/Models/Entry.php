@@ -11,6 +11,8 @@ class Entry extends Model
 
     protected $fillable = [
         'stage',
+        'ref1',
+        'ref2'
     ];
 
     public function user()
@@ -54,4 +56,16 @@ class Entry extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function ref1_user()
+    {
+        return $this->belongsTo(User::class, 'ref1');
+    }
+
+    public function ref2_user()
+    {
+        return $this->belongsTo(User::class, 'ref2');
+    }
+
 }
+

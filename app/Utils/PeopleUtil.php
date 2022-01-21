@@ -7,7 +7,7 @@ use App\Models\User;
 
 class PeopleUtil {
 
-    public static function updateEntry(User $user, ?Entry $superEntryDefault = null)
+    public static function updateEntry(User $user, ?Entry $superEntryDefault = null, $newUser=true)
     {
         // reset user's entry first
         self::deleteEntry($user->entry);
@@ -36,7 +36,7 @@ class PeopleUtil {
         /**
          * Do action of adding new entry
          */
-        self::insertEntryIntoBlankPositionOfGroup($superEntry, $user);
+        self::insertEntryIntoBlankPositionOfGroup($superEntry, $user, $newUser);
 
         /* Finished :) */
         return true;
@@ -119,7 +119,7 @@ class PeopleUtil {
     /**
      * Insert new entry to blank position of target group.
      */
-    private static function insertEntryIntoBlankPositionOfGroup(Entry $super_entry /* super entry */, User $user)
+    private static function insertEntryIntoBlankPositionOfGroup(Entry $super_entry /* super entry */, User $user, $newUser)
     {
         $attribute = [
             'stage' => $super_entry->stage
@@ -132,7 +132,6 @@ class PeopleUtil {
         $parentEntry = $super_entry;
 
         //
-        $moneyReceivableUser = $super_entry->user;
 
         $subEntryCount = self::getTotalSubEntryCount($super_entry);
 
@@ -144,7 +143,6 @@ class PeopleUtil {
              *
              *  Just add amount of one-people to super entry's pending amount.
              */
-            $moneyReceivableUser = $super_entry->user;
             $parentEntry = $super_entry;
         } else if ($subEntryCount < 4) {
             /**
@@ -156,7 +154,6 @@ class PeopleUtil {
              *
              *  Just add amount of one-people to super entry's pending amount.
              */
-            $moneyReceivableUser = $super_entry->sub_entries[1]->user;
             $parentEntry = $super_entry->sub_entries[0];
         } else {
             /**
@@ -166,19 +163,14 @@ class PeopleUtil {
              *     / \ / \
              *    o  o x  x
              */
-            $moneyReceivableUser = $super_entry->sub_entries[0]->user;
             $parentEntry = $super_entry->sub_entries[1];
 
         }
 
-        /**
-         * When new user comes, owner get money direclty.
-         */
-        // money by invitation
-        $moneyReceivableUser->increment('released', ConfigUtil::AMOUNT_OF_ONE());
-
+        // if user is new registered, send money to invitee.
+        $user->owner->increment('released', ConfigUtil::AMOUNT_OF_ONE());
         TransactionUtil::CRETE_TRANSACTION(
-            $moneyReceivableUser,
+            $user->owner,
             TransactionUtil::TRANSACTION_MONEY_BY_REGISTRATION_OF_ONE,
             ConfigUtil::AMOUNT_OF_ONE(),
             $user
@@ -192,46 +184,12 @@ class PeopleUtil {
         // increase subEntryCount after new entry is added.
         $subEntryCount ++;
 
-        // Need to memory sibling so that make it easy to make transaction history.
-        $siblingEntry = null;
-
-        if ($subEntryCount == 2) {
-            $siblingEntry = $super_entry->sub_entries[0];
-        } else if ($subEntryCount == 4) {
-            $siblingEntry = $super_entry->sub_entries[0]->sub_entries[0];
-        } else if ($subEntryCount == 6) {
-            $siblingEntry = $super_entry->sub_entries[1]->sub_entries[0];
-        }
-
-        if ($siblingEntry != null) {
-            // apply sibling
-            $entry->sibling_id = $siblingEntry->user_id;
-            $siblingEntry->sibling_id = $user->id;
-
-            $entry->save();
-            $siblingEntry->save();
-        }
-
-        // if 2 child member is full, receive 2400 as pending.
-        switch($subEntryCount) {
-            case 2:
-            case 4:
-            case 6:
-                // money by complete net.
-                $moneyReceivableUser->increment('pending', ConfigUtil::AMOUNT_OF_ONE() * 2);
-                TransactionUtil::CRETE_TRANSACTION(
-                    $moneyReceivableUser,
-                    TransactionUtil::TRANSACTION_MONEY_BY_REGISTRATION_OF_TWO,
-                    ConfigUtil::AMOUNT_OF_ONE() * 2,
-                    $entry->user,
-                    $siblingEntry->user
-                );
-                break;
-        }
-
         // finalize
         // if net is full.
         if ( $subEntryCount == 6 ) {
+
+            // update cross reference info of user
+            self::updateCrossRef($super_entry);
 
             // money by finish net.
             $super_entry->user->increment('released', ConfigUtil::AMOUNT_OF_UP_STAGE());
@@ -245,30 +203,34 @@ class PeopleUtil {
 
             $super_entry_user = $super_entry->user;
 
+            $super_entry_user->increment('step', 1);
+
             if ($super_entry_user->owner == null) {
                 // if user is manager
                 self::upgradeEntryStageOfUser($super_entry_user);
                 return true;
             } else {
-                // check if sibling is already finished in same stage.
-                // if so previous parent should be paid.
-                if ($super_entry->getSiblingEntry() == null) {
-                    // money by
-                    self::transferMoneyFromPendingToReleased($super_entry->parent_user, ConfigUtil::AMOUNT_OF_ONE() * 2);
 
-                    TransactionUtil::CRETE_TRANSACTION(
-                        $super_entry->parent_user,
-                        TransactionUtil::TRANSACTION_MONEY_BY_TWO_LEAVE,
-                        ConfigUtil::AMOUNT_OF_ONE() * 2,
-                        $super_entry->user,
-                        $super_entry->sibling
-                    );
-                }
+                $super_entry->ref1_user->owner->increment('released', ConfigUtil::AMOUNT_OF_ONE());
+                TransactionUtil::CRETE_TRANSACTION(
+                    $super_entry->ref1_user->owner,
+                    TransactionUtil::TRANSACTION_MONEY_BY_MOVE_NET_CROSS,
+                    ConfigUtil::AMOUNT_OF_ONE(),
+                    $super_entry->ref1_user
+                );
+
+                $super_entry->ref2_user->owner->increment('released', ConfigUtil::AMOUNT_OF_ONE());
+                TransactionUtil::CRETE_TRANSACTION(
+                    $super_entry->ref2_user->owner,
+                    TransactionUtil::TRANSACTION_MONEY_BY_MOVE_NET_CROSS,
+                    ConfigUtil::AMOUNT_OF_ONE(),
+                    $super_entry->ref2_user
+                );
 
                 self::deleteEntry($super_entry);
 
                 // add new entry for super_entry_user because we already deleted entry of him/her
-                return self::updateEntry($super_entry_user);
+                return self::updateEntry($super_entry_user, null, false);
             }
         }
 
@@ -312,9 +274,16 @@ class PeopleUtil {
         return $total;
     }
 
-    private static function transferMoneyFromPendingToReleased(User $user, $amount)
+    private static function updateCrossRef(Entry $super_entry)
     {
-        $user->decrement('pending', $amount);
-        $user->increment('released_from_pending', $amount);
+        $super_entry->sub_entries[0]->update([
+            'ref1' => $super_entry->sub_entries[1]->sub_entries[0]->user->id,
+            'ref2' => $super_entry->sub_entries[1]->sub_entries[1]->user->id
+        ]);
+
+        $super_entry->sub_entries[1]->update([
+            'ref1' => $super_entry->sub_entries[0]->sub_entries[0]->user->id,
+            'ref2' => $super_entry->sub_entries[0]->sub_entries[1]->user->id
+        ]);
     }
 }

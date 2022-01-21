@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h2>网体结构</h2>
+                <h2>网体排列</h2>
             </div>
         </div>
     </div>

@@ -19,11 +19,11 @@
                 @csrf
                 <div class="card-body">
                     <div class="form-group">
-                        <label>真实姓名</label>
+                        <label>报单姓名</label>
                         <input class="form-control" readonly value="{{ auth()->user()->username }}">
                     </div>
                     <div class="form-group">
-                        <label for="bank">会员姓名</label>
+                        <label for="bank">银行姓名</label>
                         <select class="custom-select" id="bank" name="bank">
                             <option disabled class="d-none" value=0 selected>请选择收款方式</option>
                             @foreach (App\BankConfig::SUPPORTED_BANKS as $bank)

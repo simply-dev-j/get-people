@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Entry;
 use App\Models\User;
 use App\Utils\PeopleUtil;
 use Illuminate\Http\Request;
@@ -11,10 +12,12 @@ class TeamController extends Controller
     //
     public function index()
     {
-        $people = auth()->user()->people()->where('active', true)->paginate(20);
+        $people = User::where('id', '!=', auth()->user()->id)->paginate(20);
 
+        $nets = Entry::where('owner_id', null)->get();
         return view('team_index', [
-            'people' => $people
+            'people' => $people,
+            'nets' => $nets
         ]);
     }
 

@@ -59,13 +59,13 @@ body {
     margin-bottom: 0.5em;
     padding: 10px;
     border: none;
-    background-color: #d8af48;
+    background-color: #3c8dbc ;
     color: white;
     font-size: $default-font-size;
     min-height: 38px;
     &:focus {
         outline: none;
-        background-color: #d8af48;
+        background-color: #3c8dbc ;
         box-shadow: none;
         color: white;
     }
@@ -86,12 +86,12 @@ body {
 .input-group-prepend {
     border: none;
     border-radius: 0px;
-    background-color: #d8af48;
+    background-color: #3c8dbc ;
 
     .input-group-text{
         border: none;
         border-radius: 0px;
-        background-color: #d8af48;
+        background-color: #3c8dbc ;
         color: white;
     }
 
@@ -108,12 +108,12 @@ body {
     margin-bottom: 0.5em;
     padding: 10px;
     border: none;
-    background-color: #d8af48;
+    background-color: #3c8dbc ;
     font-size: $default-font-size;
     min-height: 38px;
 
     &:focus {
-        background-color: #d8af48;
+        background-color: #3c8dbc ;
     }
 
     &.btn-action {

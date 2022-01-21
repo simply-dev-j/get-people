@@ -18,7 +18,7 @@
             <i class="fa fa-user"></i>
         </span>
     </div>
-    <input type="text" name="name" id="name" class="form-control form-input" value="{{old('name')}}"
+    <input type="text" name="username" id="username" class="form-control form-input" value="{{old('username')}}"
     placeholder="{{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_NAME) }}">
 </div>
 
@@ -28,7 +28,7 @@
             <i class="fa fa-user"></i>
         </span>
     </div>
-    <input type="text" name="username" id="username" class="form-control form-input" value="{{old('username')}}"
+    <input type="text" name="name" id="name" class="form-control form-input" value="{{old('name')}}"
     placeholder="账号">
 </div>
 
@@ -42,7 +42,7 @@
     placeholder="手机">
 </div>
 
-<div class="input-group mt-3">
+{{-- <div class="input-group mt-3">
     <div class="input-group-prepend">
         <span class="input-group-text" id="basic-addon1">
             <i class="fa fa-id-card"></i>
@@ -50,7 +50,7 @@
     </div>
     <input type="text" name="id_number" id="id_number" class="form-control form-input" value="{{old('id_number')}}"
     placeholder="身份证号码">
-</div>
+</div> --}}
 
 {{-- <label for="email">
     {{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_EMAIL) }}

@@ -19,7 +19,7 @@
                 @csrf
                 <div class="card-body">
                     <div class="form-group">
-                        <label>会员账号</label>
+                        <label>报单列表</label>
                         <input class="form-control" readonly value="{{ auth()->user()->name }}">
                     </div>
                     <div class="form-group">

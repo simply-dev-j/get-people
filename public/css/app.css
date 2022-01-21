@@ -16172,14 +16172,14 @@ body .auth-layout .navbar-container .navbar {
   margin-bottom: 0.5em;
   padding: 10px;
   border: none;
-  background-color: #d8af48;
+  background-color: #3c8dbc;
   color: white;
   font-size: 12px;
   min-height: 38px;
 }
 .form-input:focus {
   outline: none;
-  background-color: #d8af48;
+  background-color: #3c8dbc;
   box-shadow: none;
   color: white;
 }
@@ -16213,12 +16213,12 @@ body .auth-layout .navbar-container .navbar {
 .input-group-prepend {
   border: none;
   border-radius: 0px;
-  background-color: #d8af48;
+  background-color: #3c8dbc;
 }
 .input-group-prepend .input-group-text {
   border: none;
   border-radius: 0px;
-  background-color: #d8af48;
+  background-color: #3c8dbc;
   color: white;
 }
 .input-group-prepend::after {
@@ -16233,12 +16233,12 @@ body .auth-layout .navbar-container .navbar {
   margin-bottom: 0.5em;
   padding: 10px;
   border: none;
-  background-color: #d8af48;
+  background-color: #3c8dbc;
   font-size: 12px;
   min-height: 38px;
 }
 .btn:focus {
-  background-color: #d8af48;
+  background-color: #3c8dbc;
 }
 .btn.btn-action {
   float: right;
