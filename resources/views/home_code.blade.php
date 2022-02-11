@@ -1,7 +1,16 @@
 @extends('layout.app_layout')
 
-@section('content')
+@section('content-header')
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h2>推荐列表</h2>
+            </div>
+        </div>
+    </div>
+@endsection
 
+@section('content')
 <div class="card">
     <div class="card-header">
         <div class="callout callout-info bg-primary">
@@ -41,6 +50,7 @@
         <table class="table table-bordered mt-2">
             <thead>
                 <tr>
+                    <th>#</th>
                     <th>注册账号</th>
                     <th>注册姓名</th>
                     <th>手机号码</th>
@@ -52,8 +62,11 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($people as $member)
+                @foreach ($people as $i => $member)
                     <tr>
+                        <td>
+                            {{ $people->perPage() * ($people->currentPage()-1) + ($i + 1) }}
+                        </td>
                         <td>{{ $member->name }}</td>
                         <td>{{ $member->username }}</td>
                         <td>{{ $member->phone }}</td>
@@ -69,11 +82,13 @@
                         </td>
                         <td>
                             @if($member->active)
+                                <a href="{{ route(App\WebRoute::TEAM_NET, ['user' => $member, 'showMember' => true]) }}">
                                 @foreach (App\Utils\PeopleUtil::getBelongedMember($member) as $member_element)
                                     @if (isset($member_element))
                                         {{ $member_element->username }} ({{ $member_element->name }})<br>
                                     @endif
                                 @endforeach
+                                </a>
                             @endif
                         </td>
                         <td>{{ $member->created_at }}</td>

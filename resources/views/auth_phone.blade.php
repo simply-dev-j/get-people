@@ -23,7 +23,7 @@
                         <input class="form-control" readonly value="{{ auth()->user()->name }}">
                     </div>
                     <div class="form-group">
-                        <label>验证手机号</label>
+                        <label>手机号</label>
                         <input class="form-control" readonly value="{{ auth()->user()->phone }}">
                     </div>
                 </div>

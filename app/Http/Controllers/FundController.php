@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Utils\ConfigUtil;
+use App\Utils\PeopleUtil;
 use App\Utils\TransactionUtil;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class FundController extends Controller
@@ -11,7 +14,8 @@ class FundController extends Controller
     //
     public function conversionIndex()
     {
-        return view('fund_conversion');
+        $needToFundTransferPermission = auth()->user()->id > 3 && auth()->user()->fund_transfer_status != 2;
+        return view('fund_conversion', compact('needToFundTransferPermission'));
     }
 
     public function conversionPost(Request $request)
@@ -53,6 +57,48 @@ class FundController extends Controller
         flash('转账成功', 'success');
 
         return redirect()->back()->withInput();
+    }
+
+    public function conversionApprovalRequest(Request $request)
+    {
+        $user = auth()->user();
+        $currentStatus = auth()->user()->fund_transfer_status;
+
+        if ($user->released_from_pending < ConfigUtil::AMOUNT_OF_ACCEPT_FUND_TRANSFER_REQUEST()) {
+            flash('您的购车积分小于'.ConfigUtil::AMOUNT_OF_ACCEPT_FUND_TRANSFER_REQUEST().'无法申请', 'danger');
+            return redirect()->back();
+        }
+
+        if ($currentStatus == 0) {
+            auth()->user()->update([
+                'fund_transfer_status' => 1,
+                'fund_transfer_req_date' => Carbon::now()
+            ]);
+
+            flash('请等待分公司的同意', 'success');
+        } else if($currentStatus == 1) {
+            flash('审核中', 'danger');
+        }
+
+        return redirect()->back();
+
+    }
+
+    public function conversionRequestIndex(Request $request)
+    {
+        $requests = User::whereIn('fund_transfer_status', [1, 2])->paginate(20);
+        return view('fund_conversion_request', compact('requests'));
+    }
+
+    public function conversionRequestApprove(Request $request, User $user)
+    {
+        PeopleUtil::onAcceptFundTransferRequest($user);
+
+        $user->update([
+            'fund_transfer_status' => 2
+        ]);
+
+        return redirect()->back();
     }
 
     public function transferIndex()
@@ -107,7 +153,7 @@ class FundController extends Controller
         );
 
 
-        flash('转移成功', 'success');
+        flash('转账成功', 'success');
         return redirect()->back();
     }
 

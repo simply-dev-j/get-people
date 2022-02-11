@@ -35,6 +35,19 @@
         <div class="callout callout-info bg-primary">
             <p>查询统计：总共有 {{ $transactions->total() }} 条记录</p>
         </div>
+        @if($type == App\Utils\TransactionUtil::TYPE_RELEASED_FROM_PENDING)
+            @if (auth()->user()->is_admin)
+                <a type="button" class="btn btn-primary float-right" href="{{ route(App\WebRoute::FUND_TRANSFER_REQUEST_INDEX) }}">
+                    审核
+                </a>
+            @endif
+
+            @if ($needToFundTransferPermission)
+                <a type="button" class="btn btn-primary float-right" href="{{ route(App\WebRoute::FUND_TRANSFER_APPROVAL_REQUEST) }}">
+                    解冻申请
+                </a>
+            @endif
+        @endif
     </div>
 
     <div class="card-body">
@@ -44,7 +57,7 @@
                 <tr>
                     <th>记录说明</th>
                     <th>积分变动</th>
-                    <th>当时积分</th>
+                    <th>当前积分</th>
                     <th>发生时间</th>
                 </tr>
             </thead>
@@ -83,6 +96,15 @@
                                         @case(App\Utils\TransactionUtil::TRANSACTION_MONEY_WITHDRAWN_RECEIVE)
                                         从用户接受注册积分 :
                                             @break
+                                        @case(App\Utils\TransactionUtil::TRANSACTION_MONEY_BY_REGISTRATION_OF_ONE_FOR_ROOT_WITHDRAWN)
+                                        注册积分 :
+                                            @break
+                                        @case(App\Utils\TransactionUtil::TRANSACTION_MONEY_BY_REGISTRATION_OF_ONE_FOR_ROOT_RELEASED)
+                                        购物积分 :
+                                            @break
+                                        @case(App\Utils\TransactionUtil::TRANSACTION_MONEY_BY_ACCEPT_FUND_TRANSFER_REQUEST)
+                                        购车积分 :
+                                            @break
 
                                         @default
 
@@ -98,23 +120,6 @@
                         </td>
                         <td>{{ $transaction->amount > 0 ? '+' : '' }}{{ $transaction->amount }}</td>
                         <td>
-                            @if ($type == App\Utils\TransactionUtil::TYPE_ALL)
-                                @switch($transaction->type)
-                                    @case(App\Utils\TransactionUtil::TYPE_RELEASE)
-                                    购物积分
-                                        @break
-                                    @case(App\Utils\TransactionUtil::TYPE_RELEASED_FROM_PENDING)
-                                    购车积分
-                                        @break
-                                    @case(App\Utils\TransactionUtil::TYPE_WITHDRAWN)
-                                    注册积分
-                                        @break
-
-                                    @default
-
-                                @endswitch
-                            :
-                            @endif
                             {{ $transaction->current_amount }}
                         </td>
                         <td>{{ $transaction->created_at }}</td>

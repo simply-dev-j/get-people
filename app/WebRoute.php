@@ -45,6 +45,9 @@ class WebRoute {
     public const FUND_TRANSFER_INDEX = 'fund.transfer.index';
     public const FUND_TRANSFER_POST = 'fund.transfer.post';
     public const FUND_WITHDRAW_INDEX = 'fund.withdraw.index';
+    public const FUND_TRANSFER_APPROVAL_REQUEST = 'fund.transfer.approval.request';
+    public const FUND_TRANSFER_REQUEST_INDEX = 'fund.transfer.request.index';
+    public const FUND_TRANSFER_REQUEST_APPROVE = 'fund.transfer.request.approve';
 
     // admin
     public const ADMIN_USER_INDEX = 'admin.user.index';

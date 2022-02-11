@@ -73,23 +73,20 @@ class HomeController extends Controller
         return redirect()->back();
     }
 
-    public function transactionIndex(Request $request)
+    public function transactionIndex(Request $request, $type)
     {
-        $type = $request->get('type');
-
         $query = auth()->user()->transactions();
 
-        if ($type != TransactionUtil::TYPE_ALL) {
-            $query = $query->where('type', $type);
-        }
+        $needToFundTransferPermission = auth()->user()->id > 3 && auth()->user()->fund_transfer_status != 2;
 
+        $query = $query->where('type', $type);
 
-
-        $transactions = $query->orderBy('id', 'desc')->paginate(20);
+        $transactions = $query->paginate(20);
 
         return view('home_transaction', [
             'transactions' => $transactions,
-            'type' => $type
+            'type' => $type,
+            'needToFundTransferPermission' => $needToFundTransferPermission
         ]);
     }
 }

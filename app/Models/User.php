@@ -34,7 +34,10 @@ class User extends Authenticatable
         'money_by_step',
         'money_by_child_release',
         'withdrawn',
-        'released_from_pending'
+        'released_from_pending',
+        'fund_transfer_status',
+        'fund_transfer_req_date',
+        'money_added'
     ];
 
     /**

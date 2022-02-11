@@ -13,7 +13,7 @@ class AdminController extends Controller
     //
     public function userIndex()
     {
-        $people = User::whereNotIn('id', [1])->orderBy('created_at', 'desc')->paginate(20);
+        $people = User::whereNotIn('id', [1])->paginate(20);
 
         $nets = Entry::where('owner_id', null)->get();
 
@@ -29,7 +29,7 @@ class AdminController extends Controller
             'password' => 'required|max:255|same:confirm_password',
             'username' => 'required|max:255',
             'phone' => 'nullable',
-            // 'id_number' => 'required|max:255'
+            'id_number' => 'required|max:255'
         ]);
 
         $validated = array_merge($validated, [
@@ -57,14 +57,20 @@ class AdminController extends Controller
             flash('错误安全码', 'danger');
 
         } else {
+            if (PeopleUtil::isAcceptable()) {
 
-            $user->update([
-                'active' => true
-            ]);
+                $user->update([
+                    'active' => true
+                ]);
 
-            PeopleUtil::updateEntry($user);
+                PeopleUtil::updateEntry($user);
 
-            flash('用户激活成功', 'success');
+                PeopleUtil::onAccept($user);
+
+                flash('用户激活成功', 'success');
+            } else {
+                flash('注册积分不足', 'danger');
+            }
         }
 
         return redirect()->back()->withInput();
@@ -74,17 +80,33 @@ class AdminController extends Controller
     {
         $validated = $request->validate([
             'user' => 'required',
-            'selected_net' => 'required'
+            'selected_net' => 'required',
+            'security_code' => 'required'
         ]);
 
         $user = User::findOrFail($validated['user']);
         $entry = Entry::findOrFail($validated['selected_net']);
 
-        $user->update([
-            'active' => true
-        ]);
+        if ($user->security_code != $validated['security_code']) {
 
-        PeopleUtil::updateEntry($user, $entry);
+            flash('错误安全码', 'danger');
+
+        } else {
+            if (PeopleUtil::isAcceptable()) {
+
+                $user->update([
+                    'active' => true
+                ]);
+
+                PeopleUtil::updateEntry($user, $entry);
+
+                PeopleUtil::onAccept($user);
+
+                flash('用户激活成功', 'success');
+            } else {
+                flash('注册积分不足', 'danger');
+            }
+        }
 
         return redirect()->back()->withInput();
     }

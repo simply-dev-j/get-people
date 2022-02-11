@@ -14,28 +14,38 @@
 <div>
     <div class="card">
 
+        <div class="card-header">
+            @if ($needToFundTransferPermission)
+            <a type="button" class="btn btn-primary float-right" href="{{ route(App\WebRoute::FUND_TRANSFER_APPROVAL_REQUEST) }}">
+                解冻申请
+            </a>
+            @endif
+        </div>
+
         <div class="card-body">
             <form id="fund_form" method="POST">
                 @csrf
-                <div class="card-body">
-                    <div class="form-group">
-                        <label>转换类型</label>
-                        <select class="custom-select" id="conversion_method" name="conversion_method">
-                            <option class="d-none" disabled selected value>请选择</option>
-                            <option value="1">购车积分转换成购物积分（税费20%）</option>
-                            <option value="2">购物积分转换成注册积分（无税费）</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>账户余额</label>
-                        <input type="text"class="form-control" readonly id="max_amount" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label for="conversion_amount">转换金额</label>
-                        <input type="text" name="conversion_amount" class="form-control" id="conversion_amount" value="{{ old('conversion_amount') }}">
-                    </div>
-                    <button type="submit" class="btn btn-primary float-right">确认申请</button>
+                <div class="form-group">
+                    <label>转换类型</label>
+                    <select class="custom-select" id="conversion_method" name="conversion_method">
+                        <option class="d-none" disabled selected value>请选择</option>
+                        <option value="1" {{ $needToFundTransferPermission ? 'disabled' : ''}} class="{{ $needToFundTransferPermission ? 'text-danger' : ''}}">
+                            购车积分转换成购物积分（税费20%）
+                        </option>
+                        <option value="2">
+                            购物积分转换成注册积分（无税费）
+                        </option>
+                    </select>
                 </div>
+                <div class="form-group">
+                    <label>账户余额</label>
+                    <input type="text"class="form-control" readonly id="max_amount" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="conversion_amount">转换金额</label>
+                    <input type="text" name="conversion_amount" class="form-control" id="conversion_amount" value="{{ old('conversion_amount') }}">
+                </div>
+                <button type="submit" class="btn btn-primary float-right">确认申请</button>
             </form>
         </div>
 

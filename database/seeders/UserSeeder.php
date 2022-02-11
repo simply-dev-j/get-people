@@ -27,7 +27,9 @@ class UserSeeder extends Seeder
                     'is_admin' => true,
                     'security_code' => '111',
                     'active' => true,
-                    'password' => Hash::make('123456')
+                    'password' => Hash::make('123456'),
+                    'withdrawn' => 120000,
+                    'money_added' => 120000
                 ]);
 
                 $user->entry()->create([
@@ -42,7 +44,9 @@ class UserSeeder extends Seeder
                     'is_admin' => true,
                     'security_code' => '111',
                     'active' => true,
-                    'password' => Hash::make('123456')
+                    'password' => Hash::make('123456'),
+                    'withdrawn' => 120000,
+                    'money_added' => 120000
                 ]);
 
                 $user->entry()->create([

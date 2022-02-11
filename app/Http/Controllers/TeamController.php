@@ -12,12 +12,22 @@ class TeamController extends Controller
     //
     public function index()
     {
-        $people = User::where('id', '!=', auth()->user()->id)->paginate(20);
+        // No need to show root
+        $people = User::where('id', '!=', 1);
+
+        // if current user is sub-company, no need to show sub-companies.
+        if (auth()->user()->id > 1) {
+            $people = $people->where('id', '>', 3);
+        }
+
+        $people = $people->paginate(20);
 
         $nets = Entry::where('owner_id', null)->get();
+
         return view('team_index', [
             'people' => $people,
-            'nets' => $nets
+            'nets' => $nets,
+            'isAcceptable' => PeopleUtil::isAcceptable()
         ]);
     }
 
@@ -27,10 +37,13 @@ class TeamController extends Controller
             $user = auth()->user();
         }
 
+        $showMember = $request->get('showMember', false);
+
         $net = PeopleUtil::getNet($user);
 
         return view('team_net', [
-            'net' => $net
+            'net' => $net,
+            'showMember' => $showMember
         ]);
     }
 }

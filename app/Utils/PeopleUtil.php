@@ -7,6 +7,55 @@ use App\Models\User;
 
 class PeopleUtil {
 
+    public static function isAcceptable()
+    {
+        $root = User::find(1);
+
+        return $root->withdrawn >= 3000;
+    }
+
+    public static function onAccept(User $user)
+    {
+        $root = User::find(1);
+
+        $root->increment('withdrawn', ConfigUtil::AMOUNT_OF_ONE_WITHDRAWN_FOR_ROOT());
+        TransactionUtil::CRETE_TRANSACTION(
+            $root,
+            TransactionUtil::TRANSACTION_MONEY_BY_REGISTRATION_OF_ONE_FOR_ROOT_WITHDRAWN,
+            ConfigUtil::AMOUNT_OF_ONE_WITHDRAWN_FOR_ROOT(),
+            $user
+        );
+
+        $root->increment('released', ConfigUtil::AMOUNT_OF_ONE_RELEASED_FOR_ROOT());
+        TransactionUtil::CRETE_TRANSACTION(
+            $root,
+            TransactionUtil::TRANSACTION_MONEY_BY_REGISTRATION_OF_ONE_FOR_ROOT_RELEASED,
+            ConfigUtil::AMOUNT_OF_ONE_RELEASED_FOR_ROOT(),
+            $user
+        );
+    }
+
+    // 사용자의 전송요청을 수락할때 root로 료금전송.
+    public static function onAcceptFundTransferRequest(User $user)
+    {
+        $root = User::find(1);
+
+        $root->increment('released_from_pending', ConfigUtil::AMOUNT_OF_ACCEPT_FUND_TRANSFER_REQUEST());
+        TransactionUtil::CRETE_TRANSACTION(
+            $root,
+            TransactionUtil::TRANSACTION_MONEY_BY_ACCEPT_FUND_TRANSFER_REQUEST,
+            ConfigUtil::AMOUNT_OF_ACCEPT_FUND_TRANSFER_REQUEST(),
+            $user
+        );
+
+        $user->decrement('released_from_pending', ConfigUtil::AMOUNT_OF_ACCEPT_FUND_TRANSFER_REQUEST());
+        TransactionUtil::CRETE_TRANSACTION(
+            $user,
+            TransactionUtil::TRANSACTION_MONEY_BY_ACCEPT_FUND_TRANSFER_REQUEST,
+            -ConfigUtil::AMOUNT_OF_ACCEPT_FUND_TRANSFER_REQUEST(),
+        );
+    }
+
     public static function updateEntry(User $user, ?Entry $superEntryDefault = null, $newUser=true)
     {
         // reset user's entry first
@@ -84,7 +133,12 @@ class PeopleUtil {
         }
 
         if ($index == 0) {
-            return [$net[1], $net[2]];
+            if ($user->id == 1) {
+                // if user is root, then return direct sub members
+                return [$net[1], $net[2]];
+            } else {
+                return [$user->entry->ref1_user, $user->entry->ref2_user];
+            }
         } else if($index == 1) {
             return [$net[5], $net[6]];
         } else if($index == 2) {
@@ -168,13 +222,15 @@ class PeopleUtil {
         }
 
         // if user is new registered, send money to invitee.
-        $user->owner->increment('released', ConfigUtil::AMOUNT_OF_ONE());
-        TransactionUtil::CRETE_TRANSACTION(
-            $user->owner,
-            TransactionUtil::TRANSACTION_MONEY_BY_REGISTRATION_OF_ONE,
-            ConfigUtil::AMOUNT_OF_ONE(),
-            $user
-        );
+        if ($newUser) {
+            $user->owner->increment('released', ConfigUtil::AMOUNT_OF_ONE());
+            TransactionUtil::CRETE_TRANSACTION(
+                $user->owner,
+                TransactionUtil::TRANSACTION_MONEY_BY_REGISTRATION_OF_ONE,
+                ConfigUtil::AMOUNT_OF_ONE(),
+                $user
+            );
+        }
 
         // add new entry to group
         $parentEntry->sub_entries()->save($entry);
@@ -203,30 +259,28 @@ class PeopleUtil {
 
             $super_entry_user = $super_entry->user;
 
-            $super_entry_user->increment('step', 1);
+            // 걸린사람에 해당한 차구매적분 증가.
+            $super_entry->ref1_user->owner->increment('released_from_pending', ConfigUtil::AMOUNT_OF_ONE());
+            TransactionUtil::CRETE_TRANSACTION(
+                $super_entry->ref1_user->owner,
+                TransactionUtil::TRANSACTION_MONEY_BY_MOVE_NET_CROSS,
+                ConfigUtil::AMOUNT_OF_ONE(),
+                $super_entry->ref1_user
+            );
+
+            $super_entry->ref2_user->owner->increment('released_from_pending', ConfigUtil::AMOUNT_OF_ONE());
+            TransactionUtil::CRETE_TRANSACTION(
+                $super_entry->ref2_user->owner,
+                TransactionUtil::TRANSACTION_MONEY_BY_MOVE_NET_CROSS,
+                ConfigUtil::AMOUNT_OF_ONE(),
+                $super_entry->ref2_user
+            );
 
             if ($super_entry_user->owner == null) {
                 // if user is manager
                 self::upgradeEntryStageOfUser($super_entry_user);
                 return true;
             } else {
-
-                $super_entry->ref1_user->owner->increment('released', ConfigUtil::AMOUNT_OF_ONE());
-                TransactionUtil::CRETE_TRANSACTION(
-                    $super_entry->ref1_user->owner,
-                    TransactionUtil::TRANSACTION_MONEY_BY_MOVE_NET_CROSS,
-                    ConfigUtil::AMOUNT_OF_ONE(),
-                    $super_entry->ref1_user
-                );
-
-                $super_entry->ref2_user->owner->increment('released', ConfigUtil::AMOUNT_OF_ONE());
-                TransactionUtil::CRETE_TRANSACTION(
-                    $super_entry->ref2_user->owner,
-                    TransactionUtil::TRANSACTION_MONEY_BY_MOVE_NET_CROSS,
-                    ConfigUtil::AMOUNT_OF_ONE(),
-                    $super_entry->ref2_user
-                );
-
                 self::deleteEntry($super_entry);
 
                 // add new entry for super_entry_user because we already deleted entry of him/her
@@ -276,6 +330,13 @@ class PeopleUtil {
 
     private static function updateCrossRef(Entry $super_entry)
     {
+        // 현재 사용자가 root라면 하위의 두 사용자를 cross-ref로 보관한다.
+        if ($super_entry->user->owner == null) {
+            $super_entry->update([
+                'ref1' => $super_entry->sub_entries[0]->user->id,
+                'ref2' => $super_entry->sub_entries[1]->user->id,
+            ]);
+        }
         $super_entry->sub_entries[0]->update([
             'ref1' => $super_entry->sub_entries[1]->sub_entries[0]->user->id,
             'ref2' => $super_entry->sub_entries[1]->sub_entries[1]->user->id

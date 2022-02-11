@@ -73,7 +73,7 @@
         <div class="small-box bg-info">
           <div class="inner">
             <h5>
-                {{ auth()->user()->withdrawn + auth()->user()->released + auth()->user()->released_from_pending }}
+                {{ auth()->user()->money_added }}
             </h5>
             {{-- 종합 --}}
             <div class="text-sm">累计积分</div>
@@ -81,7 +81,8 @@
           <div class="icon">
             <i class="ion ion-bag"></i>
           </div>
-          <a href="{{ route(App\WebRoute::TRANSACTION_INDEX, ['type' => App\Utils\TransactionUtil::TYPE_ALL]) }}" class="small-box-footer">查看明细  <i class="fas fa-arrow-circle-right"></i></a>
+          {{-- <a href="{{ route(App\WebRoute::TRANSACTION_INDEX, ['type' => App\Utils\TransactionUtil::TYPE_ALL]) }}" class="small-box-footer">查看明细  <i class="fas fa-arrow-circle-right"></i></a> --}}
+          <a class="small-box-footer"><br></a>
         </div>
       </div>
 

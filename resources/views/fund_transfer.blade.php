@@ -32,7 +32,7 @@
                         <input type="text" name="transfer_amount" class="form-control" id="transfer_amount" value="{{ old('transfer_amount') }}">
                     </div>
                     <div class="form-group">
-                        <label for="security_code">验证码</label>
+                        <label for="security_code">安全码</label>
                         <input type="text" name="security_code" class="form-control" id="security_code" value="{{ old('security_code') }}">
                     </div>
                     <button type="submit" class="btn btn-primary float-right">确认转账</button>
@@ -77,7 +77,7 @@
                 min: ' 可转账金额不足'
             },
             security_code: {
-                required: '请输入验证码'
+                required: '请输入安全码'
             }
         },
         errorElement: 'span',

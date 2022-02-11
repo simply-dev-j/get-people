@@ -55,7 +55,7 @@ Route::middleware('auth')->group(function() {
 
     // transaction
     Route::prefix('transaction')->group(function() {
-        Route::any('/', [HomeController::class, 'transactionIndex'])->name(WebRoute::TRANSACTION_INDEX);
+        Route::any('/{type}', [HomeController::class, 'transactionIndex'])->name(WebRoute::TRANSACTION_INDEX);
     });
 
     // team management
@@ -78,6 +78,9 @@ Route::middleware('auth')->group(function() {
         Route::get('/transfer', [FundController::class, 'transferIndex'])->name(WebRoute::FUND_TRANSFER_INDEX);
         Route::post('/transfer', [FundController::class, 'transferPost'])->name(WebRoute::FUND_TRANSFER_POST);
         Route::get('/withdraw', [FundController::class, 'withdraw'])->name(WebRoute::FUND_WITHDRAW_INDEX);
+        Route::any('/conversion/request', [FundController::class, 'conversionApprovalRequest'])->name(WebRoute::FUND_TRANSFER_APPROVAL_REQUEST);
+        Route::get('/conversion/request/all', [FundController::class, 'conversionRequestIndex'])->name(WebRoute::FUND_TRANSFER_REQUEST_INDEX);
+        Route::any('/conversion/request/approve/{user}', [FundController::class, 'conversionRequestApprove'])->name(WebRoute::FUND_TRANSFER_REQUEST_APPROVE);
     });
 
     // profile

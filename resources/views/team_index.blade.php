@@ -52,31 +52,38 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>报单列表</th>
+                        <th>#</th>
+                        <th>报单账号</th>
                         <th>报单姓名</th>
+                        <th>推荐人</th>
                         <th>手机号码</th>
                         <th>注册时间</th>
                         <th>激活</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($people as $member)
+                    @foreach ($people as $i => $member)
                         <tr>
+                            <td>
+                                {{ $people->perPage() * ($people->currentPage()-1) + ($i + 1) }}
+                            </td>
                             <td>{{ $member->name }}</td>
                             <td>{{ $member->username }}</td>
+                            <td>{{ $member->owner->username }} ({{ $member->owner->name }})</td>
                             <td>{{ $member->phone }}</td>
                             <td>{{ $member->created_at }}</td>
                             <td>
                                 @if (!$member->active)
                                     @if(auth()->user()->is_admin)
                                         <div class="btn-group">
-                                            <a class="btn btn-primary btn-sm" href="#" data-toggle="modal" data-target="#modal-user-active"
-                                                onclick="document.getElementById('selected_user_for_active').value={{$member->id}}">激活</a>
-                                            <a class="btn btn-danger btn-sm" href="#" role="form-submit" target-form="#member_delete_form_{{$member->id}}">删除</a>
-                                            <a class="btn btn-secondary btn-sm" href="#" data-toggle="modal" data-target="#modal-user-register-special"
+                                            <a class="btn btn-primary btn-sm" href="#" data-toggle="modal" data-target="#modal-user-register-special"
                                                 onclick="document.getElementById('selected_user').value={{$member->id}}">
-                                                选择
+                                                激活
                                             </a>
+                                            {{-- <a class="btn btn-primary btn-sm" href="#" data-toggle="modal" data-target="#modal-user-active"
+                                                onclick="document.getElementById('selected_user_for_active').value={{$member->id}}">激活</a> --}}
+                                            <a class="btn btn-danger btn-sm" href="#" role="form-submit" target-form="#member_delete_form_{{$member->id}}">删除</a>
+
                                         </div>
 
 
@@ -111,43 +118,60 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <div class="card">
-                        <div class="card-body">
-                            <form id="user-special-net-form" method="POST" action="{{ route(App\WebRoute::ADMIN_USER_ACTIVATE_IN_SPEC_NET) }}">
-                                @csrf
-                                <input type="hidden" id="selected_user"  name="user">
-                                <table class="table table-bordered">
-                                    {{-- <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>User</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead> --}}
-                                    <tbody>
-                                        @foreach ($nets as $net)
-                                        <tr>
-                                            <td>
-                                                <div class="custom-control custom-radio">
-                                                    <input class="custom-control-input" type="radio" id="netRadio{{$net->id}}" name="selected_net" value="{{$net->id}}">
-                                                    <label for="netRadio{{$net->id}}" class="custom-control-label"></label>
-                                                </div>
-                                            </td>
-                                            <td>{{ $net->user->username }} ({{ $net->user->name }})</td>
-                                            <td>
-                                                @foreach (App\Utils\PeopleUtil::getNet($net->user) as $net_element)
-                                                    <i class="fa fa-user" style="color: {{ isset($net_element)? 'blue' : 'lightgray' }}"></i>
-                                                @endforeach
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </form>
+                @if ($isAcceptable)
+                    <div class="modal-body">
+                        <div class="card">
+                            <div class="card-body">
+                                <form id="user-special-net-form" method="POST" action="{{ route(App\WebRoute::ADMIN_USER_ACTIVATE_IN_SPEC_NET) }}">
+                                    @csrf
+                                    <input type="hidden" id="selected_user"  name="user">
+                                    <div class="input-group mt-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">
+                                                <i class="fa fa-key"></i>
+                                            </span>
+                                        </div>
+                                        <input name="security_code" id="security_code" class="form-control form-input"
+                                        placeholder="{{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_SECURITY_CODE) }}">
+                                    </div>
+                                    <table class="table table-bordered mt-5">
+                                        {{-- <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>User</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead> --}}
+                                        <tbody>
+                                            @foreach ($nets as $net)
+                                            <tr>
+                                                <td>
+                                                    <div class="custom-control custom-radio">
+                                                        <input class="custom-control-input" type="radio" id="netRadio{{$net->id}}" name="selected_net" value="{{$net->id}}">
+                                                        <label for="netRadio{{$net->id}}" class="custom-control-label"></label>
+                                                    </div>
+                                                </td>
+                                                <td>{{ $net->user->username }} ({{ $net->user->name }})</td>
+                                                <td>
+                                                    @foreach (App\Utils\PeopleUtil::getNet($net->user) as $net_element)
+                                                        <i class="fa fa-user" style="color: {{ isset($net_element)? 'blue' : 'lightgray' }}"></i>
+                                                    @endforeach
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @else
+                    <div class="modal-body">
+                        <div class="alert alert-danger">
+                            注册积分不足
+                        </div>
+                    </div>
+                @endif
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
                     <button type="button" class="btn btn-primary" role="form-submit" target-form="#user-special-net-form">确认</button>
@@ -165,25 +189,33 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <form id="user-form-active" method="POST" action="{{ route(App\WebRoute::ADMIN_USER_ACTIVATE) }}">
-                        @csrf
-                        <input type="hidden" name="user" id="selected_user_for_active"/>
-                        <div class="input-group mt-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">
-                                    <i class="fa fa-key"></i>
-                                </span>
+                @if ($isAcceptable)
+                    <div class="modal-body">
+                        <form id="user-form-active" method="POST" action="{{ route(App\WebRoute::ADMIN_USER_ACTIVATE) }}">
+                            @csrf
+                            <input type="hidden" name="user" id="selected_user_for_active"/>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">
+                                        <i class="fa fa-key"></i>
+                                    </span>
+                                </div>
+                                <input name="security_code" id="security_code" class="form-control form-input"
+                                placeholder="{{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_SECURITY_CODE) }}">
                             </div>
-                            <input name="security_code" id="security_code" class="form-control form-input"
-                            placeholder="{{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_SECURITY_CODE) }}">
+                        </form>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" role="form-submit" target-form="#user-form-active">确认</button>
+                    </div>
+                @else
+                    <div class="modal-body">
+                        <div class="alert alert-danger">
+                            注册积分不足
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" role="form-submit" target-form="#user-form-active">确认</button>
-                </div>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -267,11 +299,16 @@
             selected_net: {
                 required: true,
             },
-
+            security_code: {
+                required: true,
+            },
         },
         messages: {
             selected_net: {
                 required: "请选择网体",
+            },
+            security_code: {
+                required: "请输入安全密码",
             },
         },
         errorElement: 'span',
