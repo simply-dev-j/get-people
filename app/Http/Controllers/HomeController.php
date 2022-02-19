@@ -6,6 +6,7 @@ use App\LocaleConstants;
 use App\Models\Entry;
 use App\Models\InviteCode;
 use App\Models\User;
+use App\Utils\PeopleUtil;
 use App\Utils\TransactionUtil;
 use Illuminate\Http\Request;
 use Str;
@@ -35,11 +36,14 @@ class HomeController extends Controller
      */
     public function codeIndex(Request $request)
     {
-        $people = auth()->user()->people()->paginate(20);
+        $people = auth()->user()->people()->orderBy('id', 'desc')->paginate(20);
         $nets = Entry::where('owner_id', null)->get();
+        $subCompanies = PeopleUtil::getSubCompanies();
+
         return view('home_code', [
             'people' => $people,
-            'nets' => $nets
+            'nets' => $nets,
+            'subCompanies' => $subCompanies
         ]);
     }
 
@@ -80,6 +84,8 @@ class HomeController extends Controller
         $needToFundTransferPermission = auth()->user()->id > 3 && auth()->user()->fund_transfer_status != 2;
 
         $query = $query->where('type', $type);
+
+        $query = $query->orderBy('id', 'desc');
 
         $transactions = $query->paginate(20);
 

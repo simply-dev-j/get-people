@@ -15,19 +15,24 @@ class TeamController extends Controller
         // No need to show root
         $people = User::where('id', '!=', 1);
 
-        // if current user is sub-company, no need to show sub-companies.
+        // if current user is sub-company, should show only set as verifier.
         if (auth()->user()->id > 1) {
-            $people = $people->where('id', '>', 3);
+            $people = $people->where('verifier_id', auth()->user()->id);
         }
+
+        $people = $people->orderBy('id', 'desc');
 
         $people = $people->paginate(20);
 
         $nets = Entry::where('owner_id', null)->get();
 
+        $subCompanies = PeopleUtil::getSubCompanies();
+
         return view('team_index', [
             'people' => $people,
             'nets' => $nets,
-            'isAcceptable' => PeopleUtil::isAcceptable()
+            'isAcceptable' => PeopleUtil::isAcceptable(),
+            'subCompanies' => $subCompanies
         ]);
     }
 

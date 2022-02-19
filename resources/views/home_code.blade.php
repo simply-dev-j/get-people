@@ -33,7 +33,11 @@
                     <div class="modal-body">
                         <form id="user-form" method="POST" action="{{ route(App\WebRoute::ADMIN_USER_CREATE) }}">
                             @csrf
-                            @include('partials.form.user_register_form', ['showCodeInput' => false])
+                            @include('partials.form.user_register_form', [
+                                'showCodeInput' => false,
+                                'subCompanies' => $subCompanies,
+                                'showVerifier' => $subCompanies->count() == 2
+                                ])
                         </form>
                     </div>
                     <div class="modal-footer justify-content-between">
@@ -139,6 +143,9 @@
           confirm_password: {
             equalTo: '#password',
           },
+          verifier_id: {
+              required: true
+          }
         },
         messages: {
             name: {
@@ -163,6 +170,9 @@
             confirm_password: {
                 equalTo: '两次输入密码不一致'
             },
+            verifier_id: {
+                required: '请选择分公司'
+            }
         },
         errorElement: 'span',
         errorPlacement: function (error, element) {

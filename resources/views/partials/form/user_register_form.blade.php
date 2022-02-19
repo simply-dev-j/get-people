@@ -1,5 +1,7 @@
 @php
     $showCodeInput = $showCodeInput ?? true;
+    $showVerifier = $showVerifier ?? true;
+    $subCompanies = $subCompanies ?? []
 @endphp
 
 @if ($showCodeInput)
@@ -86,3 +88,19 @@
     <input type="password" name="confirm_password" id="confirm_password" class="form-control form-input" value=""
     placeholder="{{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_CONFIRM_PASSWORD) }}">
 </div>
+
+@if ($showVerifier)
+<div class="input-group mt-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1">
+            <i class="fa fa-user"></i>
+        </span>
+    </div>
+    <select class="form-control" name="verifier_id" id="verifier_id">
+        <option class="d-none" disabled selected>分公司</option>
+        @foreach ($subCompanies as $subCompany)
+            <option value="{{$subCompany->id}}">{{$subCompany->username}} ({{$subCompany->name}})</option>
+        @endforeach
+    </select>
+</div>
+@endif

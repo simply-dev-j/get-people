@@ -37,7 +37,8 @@ class User extends Authenticatable
         'released_from_pending',
         'fund_transfer_status',
         'fund_transfer_req_date',
-        'money_added'
+        'money_added',
+        'verifier_id'
     ];
 
     /**

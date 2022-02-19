@@ -81,6 +81,12 @@ Route::middleware('auth')->group(function() {
         Route::any('/conversion/request', [FundController::class, 'conversionApprovalRequest'])->name(WebRoute::FUND_TRANSFER_APPROVAL_REQUEST);
         Route::get('/conversion/request/all', [FundController::class, 'conversionRequestIndex'])->name(WebRoute::FUND_TRANSFER_REQUEST_INDEX);
         Route::any('/conversion/request/approve/{user}', [FundController::class, 'conversionRequestApprove'])->name(WebRoute::FUND_TRANSFER_REQUEST_APPROVE);
+        Route::get('/company/edit', [FundController::class, 'companyEdit'])->name(WebRoute::FUND_COMPANY_EDIT);
+        Route::post('/company/edit', [FundController::class, 'companyEditPost'])->name(WebRoute::FUND_COMPANY_EDIT_POST);
+        Route::get('/company/adjust', [FundController::class, 'companyAdjust'])->name(WebRoute::FUND_COMPANY_ADJUST);
+        Route::post('/company/adjust', [FundController::class, 'companyAdjustPost'])->name(WebRoute::FUND_COMPANY_ADJUST_POST);
+        Route::get('/company/transfer', [FundController::class, 'companyTranfer'])->name(WebRoute::FUND_COMPANY_TRANSFER);
+        Route::post('/company/transfer', [FundController::class, 'companyTranferPost'])->name(WebRoute::FUND_COMPANY_TRANSFER_POST);
     });
 
     // profile

@@ -9,26 +9,26 @@ class PeopleUtil {
 
     public static function isAcceptable()
     {
-        $root = User::find(1);
+        $user = auth()->user();
 
-        return $root->withdrawn >= 3000;
+        return $user->withdrawn >= 3000;
     }
 
     public static function onAccept(User $user)
     {
-        $root = User::find(1);
+        $currentUser = auth()->user();
 
-        $root->increment('withdrawn', ConfigUtil::AMOUNT_OF_ONE_WITHDRAWN_FOR_ROOT());
+        $currentUser->increment('withdrawn', ConfigUtil::AMOUNT_OF_ONE_WITHDRAWN_FOR_ROOT());
         TransactionUtil::CRETE_TRANSACTION(
-            $root,
+            $currentUser,
             TransactionUtil::TRANSACTION_MONEY_BY_REGISTRATION_OF_ONE_FOR_ROOT_WITHDRAWN,
             ConfigUtil::AMOUNT_OF_ONE_WITHDRAWN_FOR_ROOT(),
             $user
         );
 
-        $root->increment('released', ConfigUtil::AMOUNT_OF_ONE_RELEASED_FOR_ROOT());
+        $currentUser->increment('released', ConfigUtil::AMOUNT_OF_ONE_RELEASED_FOR_ROOT());
         TransactionUtil::CRETE_TRANSACTION(
-            $root,
+            $currentUser,
             TransactionUtil::TRANSACTION_MONEY_BY_REGISTRATION_OF_ONE_FOR_ROOT_RELEASED,
             ConfigUtil::AMOUNT_OF_ONE_RELEASED_FOR_ROOT(),
             $user
@@ -148,6 +148,15 @@ class PeopleUtil {
         }
     }
 
+    /**
+     * Get sub-company
+     */
+    public static function getSubCompanies()
+    {
+        $subCompanies = User::whereIn('id', [2, 3])->get();
+
+        return $subCompanies;
+    }
     // Private logic
 
     /**

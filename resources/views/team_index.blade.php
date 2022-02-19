@@ -35,7 +35,11 @@
                         <div class="modal-body">
                             <form id="user-form" method="POST" action="{{ route(App\WebRoute::ADMIN_USER_CREATE) }}">
                                 @csrf
-                                @include('partials.form.user_register_form', ['showCodeInput' => false])
+                                @include('partials.form.user_register_form', [
+                                    'showCodeInput' => false,
+                                    'subCompanies' => $subCompanies,
+                                    'showVerifier' => $subCompanies->count() == 2
+                                    ])
                             </form>
                         </div>
                         <div class="modal-footer justify-content-between">
@@ -74,25 +78,23 @@
                             <td>{{ $member->created_at }}</td>
                             <td>
                                 @if (!$member->active)
-                                    @if(auth()->user()->is_admin)
-                                        <div class="btn-group">
-                                            <a class="btn btn-primary btn-sm" href="#" data-toggle="modal" data-target="#modal-user-register-special"
-                                                onclick="document.getElementById('selected_user').value={{$member->id}}">
-                                                激活
-                                            </a>
-                                            {{-- <a class="btn btn-primary btn-sm" href="#" data-toggle="modal" data-target="#modal-user-active"
-                                                onclick="document.getElementById('selected_user_for_active').value={{$member->id}}">激活</a> --}}
-                                            <a class="btn btn-danger btn-sm" href="#" role="form-submit" target-form="#member_delete_form_{{$member->id}}">删除</a>
+                                    <div class="btn-group">
+                                        <a class="btn btn-primary btn-sm" href="#" data-toggle="modal" data-target="#modal-user-register-special"
+                                            onclick="document.getElementById('selected_user').value={{$member->id}}">
+                                            激活
+                                        </a>
+                                        {{-- <a class="btn btn-primary btn-sm" href="#" data-toggle="modal" data-target="#modal-user-active"
+                                            onclick="document.getElementById('selected_user_for_active').value={{$member->id}}">激活</a> --}}
+                                        <a class="btn btn-danger btn-sm" href="#" role="form-submit" target-form="#member_delete_form_{{$member->id}}">删除</a>
 
-                                        </div>
-
+                                    </div>
 
 
-                                        <form action="{{ route(App\WebRoute::ADMIN_USER_DELETE, [$member]) }}" method="POST" id="member_delete_form_{{$member->id}}">
-                                            @csrf
-                                            @method('DELETE')
-                                        </form>
-                                    @endif
+
+                                    <form action="{{ route(App\WebRoute::ADMIN_USER_DELETE, [$member]) }}" method="POST" id="member_delete_form_{{$member->id}}">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
                                 @else
                                     {{-- <a class="btn btn-danger btn-sm" href="{{ route(App\WebRoute::ADMIN_USER_INACTIVATE, [$member]) }}">Inactivate</a> --}}
                                     <i class="fa fa-check text-success"></i>
@@ -134,17 +136,25 @@
                                         <input name="security_code" id="security_code" class="form-control form-input"
                                         placeholder="{{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_SECURITY_CODE) }}">
                                     </div>
+                                    <input class="custom-control-input" type="radio" id="netRadio0" name="selected_net" value="0">
                                     <table class="table table-bordered mt-5">
-                                        {{-- <thead>
+                                        <thead>
                                             <tr>
-                                                <th></th>
-                                                <th>User</th>
-                                                <th></th>
+                                                <th colspan="3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text" id="basic-addon1">
+                                                                <i class="fas fa-search"></i>
+                                                            </span>
+                                                        </div>
+                                                        <input type="text" class="form-control form-input" id="group-search">
+                                                    </div>
+                                                </th>
                                             </tr>
-                                        </thead> --}}
+                                        </thead>
                                         <tbody>
                                             @foreach ($nets as $net)
-                                            <tr>
+                                            <tr class="group-table-row" value="{{ $net->user->username }} {{ $net->user->name }}">
                                                 <td>
                                                     <div class="custom-control custom-radio">
                                                         <input class="custom-control-input" type="radio" id="netRadio{{$net->id}}" name="selected_net" value="{{$net->id}}">
@@ -254,6 +264,9 @@
           confirm_password: {
             equalTo: '#password',
           },
+          verifier_id: {
+              required: true
+          }
         },
         messages: {
             name: {
@@ -278,6 +291,9 @@
             confirm_password: {
                 equalTo: '两次输入密码不一致'
             },
+            verifier_id: {
+                required: '请选择分公司'
+            }
         },
         errorElement: 'span',
         errorPlacement: function (error, element) {
@@ -305,10 +321,10 @@
         },
         messages: {
             selected_net: {
-                required: "请选择网体",
+                required: "请选择网体.",
             },
             security_code: {
-                required: "请输入安全密码",
+                required: "请输入安全密码.",
             },
         },
         errorElement: 'span',
@@ -351,5 +367,24 @@
         }
       });
     });
+
+    $(document).ready(function() {
+        $('#group-search').on('change, keyup', function(e) {
+
+            const query = $(this).val();
+
+            $('.group-table-row').each(function(ele) {
+                const value = $(this).attr('value');
+
+                if (value.includes(query)) {
+                    $(this).removeClass('d-none')
+                } else {
+                    $(this).addClass('d-none')
+                    $(this).find('input').prop('checked', false)
+                }
+
+            })
+        })
+    })
 </script>
 @endpush

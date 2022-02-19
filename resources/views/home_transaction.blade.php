@@ -105,7 +105,15 @@
                                         @case(App\Utils\TransactionUtil::TRANSACTION_MONEY_BY_ACCEPT_FUND_TRANSFER_REQUEST)
                                         购车积分 :
                                             @break
-
+                                        @case(App\Utils\TransactionUtil::TRANSACTION_MONEY_ADJUST_BY_ROOT_WITHDRAWN)
+                                        注册积分 :
+                                            @break
+                                        @case(App\Utils\TransactionUtil::TRANSACTION_MONEY_ADJUST_BY_ROOT_RELEASED)
+                                        购物积分 :
+                                            @break
+                                        @case(App\Utils\TransactionUtil::TRANSACTION_MONEY_ADJUST_BY_ROOT_RELEASED_FROM_PEDNING)
+                                        购车积分 :
+                                            @break
                                         @default
 
                                     @endswitch

@@ -29,7 +29,8 @@ class AdminController extends Controller
             'password' => 'required|max:255|same:confirm_password',
             'username' => 'required|max:255',
             'phone' => 'nullable',
-            'id_number' => 'required|max:255'
+            'id_number' => 'required|max:255',
+            'verifier_id' => 'nullable'
         ]);
 
         $validated = array_merge($validated, [

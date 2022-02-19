@@ -53,15 +53,13 @@
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
-                    <ul class="nav nav-treeview">
-                        @if (auth()->user()->id <= 3) {{-- 분공사에만 유효 --}}
-                            <li class="nav-item">
-                                <a href="{{ route(App\WebRoute::TEAM_INDEX) }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>报单列表</p>
-                                </a>
-                            </li>
-                        @endif
+                    <ul class="nav nav-treeview">{{-- 분공사에만 유효 --}}
+                        <li class="nav-item">
+                            <a href="{{ route(App\WebRoute::TEAM_INDEX) }}" class="nav-link {{auth()->user()->id > 3 ? 'disabled' : ''}}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>报单列表</p>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a href="{{ route(App\WebRoute::CODE_INDEX) }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
@@ -124,6 +122,26 @@
                                 <p> 资金转账</p>
                             </a>
                         </li>
+                        @if (auth()->user()->id == 1) {{-- root 에만 유효 --}}
+                            <li class="nav-item">
+                                <a href="{{ route(App\WebRoute::FUND_COMPANY_EDIT) }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>积分变更</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route(App\WebRoute::FUND_COMPANY_ADJUST) }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>积分收回</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route(App\WebRoute::FUND_COMPANY_TRANSFER) }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>积分转移</p>
+                                </a>
+                            </li>
+                        @endif
                         <li class="nav-item">
                             <a href="{{ route(App\WebRoute::FUND_WITHDRAW_INDEX) }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>

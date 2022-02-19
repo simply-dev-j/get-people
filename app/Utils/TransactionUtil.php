@@ -25,6 +25,9 @@ class TransactionUtil
     public const TRANSACTION_MONEY_BY_REGISTRATION_OF_ONE_FOR_ROOT_WITHDRAWN= 0x0A;
     public const TRANSACTION_MONEY_BY_REGISTRATION_OF_ONE_FOR_ROOT_RELEASED= 0x0B;
     public const TRANSACTION_MONEY_BY_ACCEPT_FUND_TRANSFER_REQUEST = 0x0C;
+    public const TRANSACTION_MONEY_ADJUST_BY_ROOT_WITHDRAWN = 0x0D;
+    public const TRANSACTION_MONEY_ADJUST_BY_ROOT_RELEASED = 0x0E;
+    public const TRANSACTION_MONEY_ADJUST_BY_ROOT_RELEASED_FROM_PEDNING = 0x0F;
 
     public static function CRETE_TRANSACTION(User $user, $money_type, $amount, User $ref_user1 = null, User $ref_user2 = null)
     {
@@ -102,6 +105,20 @@ class TransactionUtil
                 self::APPLY_REF_USERS($transaction1, $ref_user1, $ref_user2);
                 break;
 
+            case self::TRANSACTION_MONEY_ADJUST_BY_ROOT_WITHDRAWN:
+                $transaction1 = self::CREATE_TRASANCTION_INSTANCE($user, self::TYPE_WITHDRAWN, $amount, $user->withdrawn, $money_type);
+                self::APPLY_REF_USERS($transaction1, $ref_user1, $ref_user2);
+                break;
+
+            case self::TRANSACTION_MONEY_ADJUST_BY_ROOT_RELEASED:
+                $transaction1 = self::CREATE_TRASANCTION_INSTANCE($user, self::TYPE_RELEASE, $amount, $user->released, $money_type);
+                self::APPLY_REF_USERS($transaction1, $ref_user1, $ref_user2);
+                break;
+
+            case self::TRANSACTION_MONEY_ADJUST_BY_ROOT_RELEASED_FROM_PEDNING:
+                $transaction1 = self::CREATE_TRASANCTION_INSTANCE($user, self::TYPE_RELEASED_FROM_PENDING, $amount, $user->released_from_pending, $money_type);
+                self::APPLY_REF_USERS($transaction1, $ref_user1, $ref_user2);
+                break;
         }
 
         if ($newMoney) {

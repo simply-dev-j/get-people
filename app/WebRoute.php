@@ -48,6 +48,12 @@ class WebRoute {
     public const FUND_TRANSFER_APPROVAL_REQUEST = 'fund.transfer.approval.request';
     public const FUND_TRANSFER_REQUEST_INDEX = 'fund.transfer.request.index';
     public const FUND_TRANSFER_REQUEST_APPROVE = 'fund.transfer.request.approve';
+    public const FUND_COMPANY_EDIT = 'fund.company.edit';
+    public const FUND_COMPANY_EDIT_POST = 'fund.company.edit.post';
+    public const FUND_COMPANY_ADJUST = 'fund.company.adjust';
+    public const FUND_COMPANY_ADJUST_POST = 'fund.company.adjust.post';
+    public const FUND_COMPANY_TRANSFER = 'fund.company.transfer';
+    public const FUND_COMPANY_TRANSFER_POST = 'fund.company.transfer.post';
 
     // admin
     public const ADMIN_USER_INDEX = 'admin.user.index';

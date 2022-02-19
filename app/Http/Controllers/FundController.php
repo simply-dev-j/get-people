@@ -86,7 +86,7 @@ class FundController extends Controller
 
     public function conversionRequestIndex(Request $request)
     {
-        $requests = User::whereIn('fund_transfer_status', [1, 2])->paginate(20);
+        $requests = User::whereIn('fund_transfer_status', [1, 2])->orderBy('id', 'desc')->paginate(20);
         return view('fund_conversion_request', compact('requests'));
     }
 
@@ -114,15 +114,16 @@ class FundController extends Controller
             'security_code' => 'required'
         ]);
 
-        $receiver = User::where('name', $validated['transfer_receiver'])->first();
+        $receiver = User::where('name', $validated['transfer_receiver'])->whereIn('id', [2, 3])->first();
+
         // if not exist
-        if($receiver == null) {
-            flash('收款人不存在', 'danger');
-            return redirect()->back()->withInput();
-        }
+        // if($receiver == null) {
+        //     flash('收款人不存在', 'danger');
+        //     return redirect()->back()->withInput();
+        // }
 
         // if receiver is not a sub-company
-        if ($receiver->id > 3) {
+        if ($receiver == null) {
             flash('注册积分只能由个人转给分公司', 'danger');
             return redirect()->back()->withInput();
         }
@@ -160,5 +161,147 @@ class FundController extends Controller
     public function withdraw()
     {
         return view('fund_withdraw');
+    }
+
+    public function companyEdit() {
+        $subCompanies = PeopleUtil::getSubCompanies();
+
+        return view('fund_company_edit', [
+            'subCompanies' => $subCompanies
+        ]);
+    }
+
+    public function companyEditPost(Request $request) {
+        $all = $request->all();
+
+        $company = User::find($all['company_id']);
+        $amount = $all['transfer_amount'];
+        $fundType = $all['fund_type'];
+
+        // securify code is wrong
+        if(auth()->user()->security_code != $all['security_code']) {
+            flash('错误安全码', 'danger');
+            return redirect()->back()->withInput();
+        }
+
+        if ($fundType == TransactionUtil::TYPE_WITHDRAWN) {
+            $company->increment('withdrawn', $amount);
+
+            TransactionUtil::CRETE_TRANSACTION(
+                $company,
+                TransactionUtil::TRANSACTION_MONEY_ADJUST_BY_ROOT_WITHDRAWN,
+                $amount,
+                auth()->user()
+            );
+        } else if ($fundType == TransactionUtil::TYPE_RELEASE) {
+            $company->increment('released', $amount);
+
+            TransactionUtil::CRETE_TRANSACTION(
+                $company,
+                TransactionUtil::TRANSACTION_MONEY_ADJUST_BY_ROOT_RELEASED,
+                $amount,
+                auth()->user()
+            );
+        } else if ($fundType == TransactionUtil::TYPE_RELEASED_FROM_PENDING) {
+            $company->increment('released_from_pending', $amount);
+
+            TransactionUtil::CRETE_TRANSACTION(
+                $company,
+                TransactionUtil::TRANSACTION_MONEY_ADJUST_BY_ROOT_RELEASED_FROM_PEDNING,
+                $amount,
+                auth()->user()
+            );
+        }
+
+        flash('积分变更成功', 'success');
+        return redirect()->back();
+
+    }
+
+    public function companyAdjust() {
+        $subCompanies = PeopleUtil::getSubCompanies();
+
+        $members = User::where('id', '!=',  1)->where('active', 1)->get();
+
+        return view('fund_company_adjust', [
+            'members' => $members
+        ]);
+    }
+
+    public function companyAdjustPost(Request $request) {
+        $all = $request->all();
+
+        $member = User::find($all['member_id']);
+        $amount = $all['transfer_amount'];
+
+        // securify code is wrong
+        if(auth()->user()->security_code != $all['security_code']) {
+            flash('错误安全码', 'danger');
+            return redirect()->back()->withInput();
+        }
+
+        $member->decrement('withdrawn', $amount);
+        auth()->user()->increment('withdrawn', $amount);
+
+        TransactionUtil::CRETE_TRANSACTION(
+            $member,
+            TransactionUtil::TRANSACTION_MONEY_ADJUST_BY_ROOT_WITHDRAWN,
+            -$amount,
+            auth()->user()
+        );
+
+        TransactionUtil::CRETE_TRANSACTION(
+            auth()->user(),
+            TransactionUtil::TRANSACTION_MONEY_ADJUST_BY_ROOT_WITHDRAWN,
+            $amount,
+            $member
+        );
+
+        flash('转账成功', 'success');
+        return redirect()->back();
+
+    }
+
+    public function companyTranfer(Request $request)
+    {
+        $subCompanies = PeopleUtil::getSubCompanies();
+
+        return view('fund_company_transfer', [
+            'subCompanies' => $subCompanies
+        ]);
+    }
+
+    public function companyTranferPost(Request $request)
+    {
+        $all = $request->all();
+
+        // securify code is wrong
+        if(auth()->user()->security_code != $all['security_code']) {
+            flash('错误安全码', 'danger');
+            return redirect()->back()->withInput();
+        }
+
+        $company = User::find($all['company_id']);
+        $amount = $all['transfer_amount'];
+
+        $company->increment('withdrawn', $amount);
+        auth()->user()->decrement('withdrawn', $amount);
+
+        TransactionUtil::CRETE_TRANSACTION(
+            $company,
+            TransactionUtil::TRANSACTION_MONEY_ADJUST_BY_ROOT_WITHDRAWN,
+            +$amount,
+            auth()->user()
+        );
+
+        TransactionUtil::CRETE_TRANSACTION(
+            auth()->user(),
+            TransactionUtil::TRANSACTION_MONEY_ADJUST_BY_ROOT_WITHDRAWN,
+            -$amount,
+            $company
+        );
+
+        flash('转账成功', 'success');
+        return redirect()->back();
     }
 }
