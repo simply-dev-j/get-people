@@ -10,12 +10,26 @@
     </div>
 @endsection
 
+@section('custom-message')
+    @if (!App\Utils\SecurityUtil::IS_AVAILABLE(App\Utils\SecurityUtil::SECURITY_CASE_FUND_TRANSFER))
+        <div class="alert alert-danger">
+            <i class="icon fas fa-ban"></i>
+            系统锁定，24小时后自动解锁
+        </div>
+    @endif
+@endsection
+
 @section('content')
 <div>
     <div class="card">
 
         <div class="card-body">
             <form id="fund_form" method="POST">
+
+                @if (!App\Utils\SecurityUtil::IS_AVAILABLE(App\Utils\SecurityUtil::SECURITY_CASE_FUND_TRANSFER))
+                    <fieldset disabled>
+                @endif
+
                 @csrf
                 <div class="card-body">
 
@@ -37,6 +51,10 @@
                     </div>
                     <button type="submit" class="btn btn-primary float-right">确认转账</button>
                 </div>
+
+                @if (!App\Utils\SecurityUtil::IS_AVAILABLE(App\Utils\SecurityUtil::SECURITY_CASE_FUND_TRANSFER))
+                    </fieldset>
+                @endif
             </form>
         </div>
 
@@ -90,7 +108,7 @@
         },
         unhighlight: function (element, errorClass, validClass) {
           $(element).removeClass('is-invalid');
-        }
+        },
       });
     });
     </script>

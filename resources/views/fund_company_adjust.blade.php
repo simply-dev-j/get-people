@@ -10,21 +10,54 @@
     </div>
 @endsection
 
+@section('custom-message')
+    @if (!App\Utils\SecurityUtil::IS_AVAILABLE(App\Utils\SecurityUtil::SECURITY_CASE_FUND_COMPANY_ADJUST))
+        <div class="alert alert-danger">
+            <i class="icon fas fa-ban"></i>
+            系统锁定，24小时后自动解锁
+        </div>
+    @endif
+@endsection
+
 @section('content')
 <div>
     <div class="card">
 
         <div class="card-body">
             <form id="fund_form" method="POST" action="{{ route(App\WebRoute::FUND_COMPANY_ADJUST_POST) }}">
+
+                @if (!App\Utils\SecurityUtil::IS_AVAILABLE(App\Utils\SecurityUtil::SECURITY_CASE_FUND_COMPANY_ADJUST))
+                    <fieldset disabled>
+                @endif
+
                 @csrf
                 <div class="card-body">
                     <div class="form-group">
-                        <label>分公司</label>
+                        <label>会员</label>
                         <select class="form-control select2" name="member_id" id="member_id">
-                            <option class="d-none" disabled selected withdrawn="0">请选择分公司</option>
+                            <option class="d-none" disabled selected
+                                withdrawn="0"
+                                released="0"
+                                released_from_pending="0" >
+                                请选择会员
+                            </option>
                             @foreach ($members as $member)
-                                <option value="{{$member->id}}" withdrawn="{{$member->withdrawn}}">{{$member->name}} ({{$member->username}})</option>
+                                <option value="{{$member->id}}"
+                                    withdrawn="{{$member->withdrawn}}"
+                                    released="{{$member->released}}"
+                                    released_from_pending="{{$member->released_from_pending}}">
+                                    {{$member->name}} ({{$member->username}})
+                                </option>
                             @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>积分种类</label>
+                        <select class="form-control" name="fund_type" id="fund_type">
+                            <option class="d-none" disabled selected>请选择积分种类</option>
+                            <option value="{{App\Utils\TransactionUtil::TYPE_WITHDRAWN}}">注册积分</option>
+                            <option value="{{App\Utils\TransactionUtil::TYPE_RELEASE}}">购物积分</option>
+                            <option value="{{App\Utils\TransactionUtil::TYPE_RELEASED_FROM_PENDING}}">购车积分</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -41,6 +74,10 @@
                     </div>
                     <button type="submit" class="btn btn-primary float-right">确认</button>
                 </div>
+
+                @if (!App\Utils\SecurityUtil::IS_AVAILABLE(App\Utils\SecurityUtil::SECURITY_CASE_FUND_COMPANY_ADJUST))
+                    </fieldset>
+                @endif
             </form>
         </div>
 
@@ -71,6 +108,9 @@
                 member_id: {
                     required: true,
                 },
+                fund_type: {
+                    required: true
+                },
                 transfer_amount: {
                     required: true,
                     max: function() {
@@ -84,7 +124,10 @@
             },
             messages: {
                 member_id: {
-                    required: '请选择分公司',
+                    required: '请选择会员',
+                },
+                fund_type: {
+                    required: '请选择积分种类'
                 },
                 transfer_amount: {
                     required: ' 请输入积分额度',
@@ -112,12 +155,27 @@
 
 <script>
     $(document).ready(function(e) {
-        $('#member_id').on('change', function(e) {
-            const member_id = $(this).val()
+        $('#member_id, #fund_type').on('change', function(e) {
 
-            const memberWithdrawnAmount = $(this).find(":selected").attr('withdrawn');
+            const type = $('#fund_type').val()
 
-            $('#max-amount').val(memberWithdrawnAmount)
+            var maxAmount = 0;
+
+            switch(type) {
+                case "{{App\Utils\TransactionUtil::TYPE_WITHDRAWN}}":
+                    maxAmount = $('#member_id').find(":selected").attr('withdrawn');
+                    break;
+                case "{{App\Utils\TransactionUtil::TYPE_RELEASE}}":
+                    maxAmount = $('#member_id').find(":selected").attr('released');
+                    break;
+                case "{{App\Utils\TransactionUtil::TYPE_RELEASED_FROM_PENDING}}":
+                    maxAmount = $('#member_id').find(":selected").attr('released_from_pending');
+                    break;
+                default:
+                    maxAmount = 0
+            }
+
+            $('#max-amount').val(maxAmount)
         })
     })
 </script>

@@ -63,4 +63,6 @@ class WebRoute {
     public const ADMIN_USER_INACTIVATE = 'admin.user.inactivate';
     public const ADMIN_USER_DELETE = 'admin.user.delete';
     public const ADMIN_USER_VALIDATE_NAME = 'admin.user.validate.name';
+    public const ADMIN_COMPANY_INDEX = 'admin.company.index';
+    public const ADMIN_COMPANY_PROMOTE = 'admin.company.promote';
 }

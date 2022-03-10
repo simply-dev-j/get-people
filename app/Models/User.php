@@ -38,7 +38,11 @@ class User extends Authenticatable
         'fund_transfer_status',
         'fund_transfer_req_date',
         'money_added',
-        'verifier_id'
+        'verifier_id',
+        'security_case',
+        'security_attempt_count',
+        'is_company',
+        'company_req_date'
     ];
 
     /**
@@ -112,6 +116,11 @@ class User extends Authenticatable
     public function center()
     {
         return $this->hasOne(Center::class);
+    }
+
+    public function security_case($case)
+    {
+        return $this->hasMany(SecurityCase::class)->firstOrCreate(['case' => $case]);
     }
 
 }

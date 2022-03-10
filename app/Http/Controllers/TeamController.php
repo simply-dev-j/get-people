@@ -5,19 +5,24 @@ namespace App\Http\Controllers;
 use App\Models\Entry;
 use App\Models\User;
 use App\Utils\PeopleUtil;
+use App\Utils\UserUtil;
 use Illuminate\Http\Request;
 
 class TeamController extends Controller
 {
     //
-    public function index()
+    public function index(Request $request)
     {
+        $company_id = $request->get('company_id');
+
         // No need to show root
         $people = User::where('id', '!=', 1);
 
         // if current user is sub-company, should show only set as verifier.
-        if (auth()->user()->id > 1) {
+        if (UserUtil::isCompany()) {
             $people = $people->where('verifier_id', auth()->user()->id);
+        } else if (UserUtil::isAdmin() && $company_id) {
+            $people = $people->where('verifier_id', $company_id);
         }
 
         $people = $people->orderBy('id', 'desc');

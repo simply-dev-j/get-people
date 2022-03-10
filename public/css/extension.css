@@ -42,3 +42,16 @@ li.page-link.active {
   color: white;
   background-color: #007bff;
 }
+
+.custom-overlay-wrapper {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0px;
+  left: 0px;
+  z-index: 9999;
+}
+
+.select2-container {
+  width: 100% !important;
+}

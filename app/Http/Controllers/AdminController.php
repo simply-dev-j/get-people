@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\LocaleConstants;
 use App\Models\Entry;
 use App\Models\User;
 use App\Utils\PeopleUtil;
+use App\Utils\SecurityUtil;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Hash;
 
@@ -51,27 +54,32 @@ class AdminController extends Controller
             'security_code' => 'required'
         ]);
 
+        // securify challeng
+        if (!SecurityUtil::SECURITY_CHALLENGE(SecurityUtil::SECURITY_CASE_USER_ACTIVATION, $validated['security_code'])){
+            flash('错误安全码', 'danger');
+            return redirect()->back()->withInput();
+        }
+
         $user = User::findOrFail($validated['user']);
 
-        if ($user->security_code != $validated['security_code']) {
+        if ($user->active) {
+            flash(__(LocaleConstants::MESSAGE_BASE.LocaleConstants::MESSAGE_USER_ACTIVE_ALREADY), 'warning');
+        }
 
-            flash('错误安全码', 'danger');
+        if (PeopleUtil::isAcceptable()) {
 
+            $user->update([
+                'active' => true,
+                'verifier_id' => auth()->user()->id
+            ]);
+
+            PeopleUtil::updateEntry($user);
+
+            PeopleUtil::onAccept($user);
+
+            flash('用户激活成功', 'success');
         } else {
-            if (PeopleUtil::isAcceptable()) {
-
-                $user->update([
-                    'active' => true
-                ]);
-
-                PeopleUtil::updateEntry($user);
-
-                PeopleUtil::onAccept($user);
-
-                flash('用户激活成功', 'success');
-            } else {
-                flash('注册积分不足', 'danger');
-            }
+            flash('注册积分不足', 'danger');
         }
 
         return redirect()->back()->withInput();
@@ -85,28 +93,33 @@ class AdminController extends Controller
             'security_code' => 'required'
         ]);
 
+        // securify challeng
+        if (!SecurityUtil::SECURITY_CHALLENGE(SecurityUtil::SECURITY_CASE_USER_ACTIVATION, $validated['security_code'])){
+            flash('错误安全码', 'danger');
+            return redirect()->back()->withInput();
+        }
+
         $user = User::findOrFail($validated['user']);
         $entry = Entry::findOrFail($validated['selected_net']);
 
-        if ($user->security_code != $validated['security_code']) {
+        if ($user->active) {
+            flash(__(LocaleConstants::MESSAGE_BASE.LocaleConstants::MESSAGE_USER_ACTIVE_ALREADY), 'warning');
+        }
 
-            flash('错误安全码', 'danger');
+        if (PeopleUtil::isAcceptable()) {
 
+            $user->update([
+                'active' => true,
+                'verifier_id' => auth()->user()->id
+            ]);
+
+            PeopleUtil::updateEntry($user, $entry);
+
+            PeopleUtil::onAccept($user);
+
+            flash('用户激活成功', 'success');
         } else {
-            if (PeopleUtil::isAcceptable()) {
-
-                $user->update([
-                    'active' => true
-                ]);
-
-                PeopleUtil::updateEntry($user, $entry);
-
-                PeopleUtil::onAccept($user);
-
-                flash('用户激活成功', 'success');
-            } else {
-                flash('注册积分不足', 'danger');
-            }
+            flash('注册积分不足', 'danger');
         }
 
         return redirect()->back()->withInput();
@@ -146,5 +159,51 @@ class AdminController extends Controller
             return "true";
         else
             return "false";
+    }
+
+    public function companyIndex(Request $request)
+    {
+        $companies = User::where('is_company', true)
+            ->where('active', true)
+            ->orderBy('id', 'desc')
+            ->paginate(20);
+
+        $users = User::where('is_company', false)
+            ->where('active', true)
+            ->where('is_admin', false)
+            ->get();
+
+        return view('admin.company', [
+            'companies' => $companies,
+            'users' => $users
+        ]);
+    }
+
+    public function companyPost(Request $request)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required',
+            'security_code' => 'required'
+        ]);
+
+        // security challenge
+        if (!SecurityUtil::SECURITY_CHALLENGE(SecurityUtil::SECURITY_CASE_COMPANY_PROMOTION, $validated['security_code'])){
+            flash('错误安全码', 'danger');
+            return redirect()->back()->withInput();
+        }
+
+        $userId = $validated['user_id'];
+
+        $user = User::findOrFail($userId);
+
+        $user->update([
+            'is_company' => true,
+            'company_req_date' => Carbon::now(),
+            'fund_transfer_status' => 2
+        ]);
+
+        flash(__(LocaleConstants::MESSAGE_BASE.LocaleConstants::MESSAGE_COMPANY_ADD_SUCCESS), 'success');
+
+        return redirect()->back();
     }
 }

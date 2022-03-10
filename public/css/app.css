@@ -16382,3 +16382,7 @@ ul.pagination li.disabled {
   padding: 0px;
   font-size: 12px;
 }
+
+.select2-container {
+  width: 100% !important;
+}

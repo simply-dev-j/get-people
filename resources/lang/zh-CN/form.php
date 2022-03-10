@@ -23,4 +23,7 @@ return [
 
     App\LocaleConstants::FORM_CODE_CREATE_AT => '创建于',
     App\LocaleConstants::FORM_CODE_CODE => '推荐码',
+
+    App\LocaleConstants::FORM_ADMIN_COMPANY_MANAGEMENT => '管理分公司',
+    App\LocaleConstants::FORM_ADMIN_COMPANY_ADD => '增加分公司',
 ];

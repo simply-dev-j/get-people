@@ -148,12 +148,30 @@ class PeopleUtil {
         }
     }
 
+    public static function getRefOwner(User $user)
+    {
+        $entry = Entry::where('ref1', $user->id)->orWhere('ref2', $user->id)->first();
+
+        if ($entry) {
+            return $entry->user;
+        } else {
+            return null;
+        }
+    }
+
     /**
      * Get sub-company
      */
-    public static function getSubCompanies()
+    public static function getSubCompanies($desc=false)
     {
-        $subCompanies = User::whereIn('id', [2, 3])->get();
+        $query = User::where('is_company', true)
+            ->where('active', true);
+
+        if ($desc) {
+            $query = $query->orderBy('id', 'desc');
+        }
+
+        $subCompanies = $query->get();
 
         return $subCompanies;
     }
@@ -231,7 +249,7 @@ class PeopleUtil {
         }
 
         // if user is new registered, send money to invitee.
-        if ($newUser) {
+        // if ($newUser) {
             $user->owner->increment('released', ConfigUtil::AMOUNT_OF_ONE());
             TransactionUtil::CRETE_TRANSACTION(
                 $user->owner,
@@ -239,7 +257,7 @@ class PeopleUtil {
                 ConfigUtil::AMOUNT_OF_ONE(),
                 $user
             );
-        }
+        // }
 
         // add new entry to group
         $parentEntry->sub_entries()->save($entry);
@@ -249,12 +267,14 @@ class PeopleUtil {
         // increase subEntryCount after new entry is added.
         $subEntryCount ++;
 
+        self::updateCrossRef($super_entry);
+
         // finalize
         // if net is full.
         if ( $subEntryCount == 6 ) {
 
             // update cross reference info of user
-            self::updateCrossRef($super_entry);
+
 
             // money by finish net.
             $super_entry->user->increment('released', ConfigUtil::AMOUNT_OF_UP_STAGE());
@@ -269,21 +289,25 @@ class PeopleUtil {
             $super_entry_user = $super_entry->user;
 
             // 걸린사람에 해당한 차구매적분 증가.
-            $super_entry->ref1_user->owner->increment('released_from_pending', ConfigUtil::AMOUNT_OF_ONE());
-            TransactionUtil::CRETE_TRANSACTION(
-                $super_entry->ref1_user->owner,
-                TransactionUtil::TRANSACTION_MONEY_BY_MOVE_NET_CROSS,
-                ConfigUtil::AMOUNT_OF_ONE(),
-                $super_entry->ref1_user
-            );
+            if ($super_entry->ref1_user) {
+                $super_entry->ref1_user->owner->increment('released_from_pending', ConfigUtil::AMOUNT_OF_ONE());
+                TransactionUtil::CRETE_TRANSACTION(
+                    $super_entry->ref1_user->owner,
+                    TransactionUtil::TRANSACTION_MONEY_BY_MOVE_NET_CROSS,
+                    ConfigUtil::AMOUNT_OF_ONE(),
+                    $super_entry->ref1_user
+                );
+            }
 
-            $super_entry->ref2_user->owner->increment('released_from_pending', ConfigUtil::AMOUNT_OF_ONE());
-            TransactionUtil::CRETE_TRANSACTION(
-                $super_entry->ref2_user->owner,
-                TransactionUtil::TRANSACTION_MONEY_BY_MOVE_NET_CROSS,
-                ConfigUtil::AMOUNT_OF_ONE(),
-                $super_entry->ref2_user
-            );
+            if ($super_entry->ref2_user) {
+                $super_entry->ref2_user->owner->increment('released_from_pending', ConfigUtil::AMOUNT_OF_ONE());
+                TransactionUtil::CRETE_TRANSACTION(
+                    $super_entry->ref2_user->owner,
+                    TransactionUtil::TRANSACTION_MONEY_BY_MOVE_NET_CROSS,
+                    ConfigUtil::AMOUNT_OF_ONE(),
+                    $super_entry->ref2_user
+                );
+            }
 
             if ($super_entry_user->owner == null) {
                 // if user is manager
@@ -339,21 +363,26 @@ class PeopleUtil {
 
     private static function updateCrossRef(Entry $super_entry)
     {
-        // 현재 사용자가 root라면 하위의 두 사용자를 cross-ref로 보관한다.
+        // 현재 사용자가 root라면 하위의 null로 보관한다.
         if ($super_entry->user->owner == null) {
             $super_entry->update([
-                'ref1' => $super_entry->sub_entries[0]->user->id,
-                'ref2' => $super_entry->sub_entries[1]->user->id,
+                'ref1' => null,//$super_entry->sub_entries[0]->user->id ?? null,
+                'ref2' => null //$super_entry->sub_entries[1]->user->id ?? null,
             ]);
         }
-        $super_entry->sub_entries[0]->update([
-            'ref1' => $super_entry->sub_entries[1]->sub_entries[0]->user->id,
-            'ref2' => $super_entry->sub_entries[1]->sub_entries[1]->user->id
-        ]);
 
-        $super_entry->sub_entries[1]->update([
-            'ref1' => $super_entry->sub_entries[0]->sub_entries[0]->user->id,
-            'ref2' => $super_entry->sub_entries[0]->sub_entries[1]->user->id
-        ]);
+        if (isset($super_entry->sub_entries[0])) {
+            $super_entry->sub_entries[0]->update([
+                'ref1' => $super_entry->sub_entries[1]->sub_entries[0]->user->id ?? null,
+                'ref2' => $super_entry->sub_entries[1]->sub_entries[1]->user->id ?? null
+            ]);
+        }
+
+        if (isset($super_entry->sub_entries[1])) {
+            $super_entry->sub_entries[1]->update([
+                'ref1' => $super_entry->sub_entries[0]->sub_entries[0]->user->id ?? null,
+                'ref2' => $super_entry->sub_entries[0]->sub_entries[1]->user->id ?? null
+            ]);
+        }
     }
 }

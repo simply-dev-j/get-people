@@ -110,6 +110,9 @@ Route::middleware('auth')->group(function() {
         Route::any('/user/{user}/inactivate', [AdminController::class, 'userInactivate'])->name(WebRoute::ADMIN_USER_INACTIVATE);
         Route::delete('/user/{user}/delete', [AdminController::class, 'userDelete'])->name(WebRoute::ADMIN_USER_DELETE);
         Route::get('/user/validate-name', [AdminController::class, 'validateName'])->name(WebRoute::ADMIN_USER_VALIDATE_NAME);
+
+        Route::get('/company', [AdminController::class, 'companyIndex'])->name(WebRoute::ADMIN_COMPANY_INDEX);
+        Route::post('/company', [AdminController::class, 'companyPost'])->name(WebRoute::ADMIN_COMPANY_PROMOTE);
     });
 });
 

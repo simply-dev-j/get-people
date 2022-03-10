@@ -19,9 +19,11 @@
                 <p>推荐会员：总共有 {{ $people->total() }} 条记录</p>
             </div>
 
-            <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#modal-user-register">
-                添加用户
-            </button>
+            <div class="text-right">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-user-register">
+                    添加用户
+                </button>
+            </div>
 
             <div class="modal fade" id="modal-user-register">
                 <div class="modal-dialog">
@@ -38,7 +40,7 @@
                                 @include('partials.form.user_register_form', [
                                     'showCodeInput' => false,
                                     'subCompanies' => $subCompanies,
-                                    'showVerifier' => $subCompanies->count() == 2
+                                    'showVerifier' => $subCompanies->count() > 0
                                     ])
                             </form>
                         </div>
@@ -49,9 +51,36 @@
                     </div>
                 </div>
             </div>
+
+            @if (App\Utils\UserUtil::isAdmin())
+                <form  id="company_select_form" method="GET" action="{{ route(App\WebRoute::TEAM_INDEX) }}">
+                    <div class="form-group">
+                        <label></label>
+                        <select class="form-control select2" id="company_id" name="company_id">
+                            <option class="d-none" disabled selected >请选择会员</option>
+                            <option value
+                                @if (Request::get('company_id') == null)
+                                    selected
+                                @endif>
+                                全部
+                            </option>
+                            @foreach ($subCompanies as $company)
+                                <option value="{{$company->id}}"
+                                    @if (Request::get('company_id') == $company->id)
+                                        selected
+                                    @endif>
+                                    {{$company->name}} ({{$company->username}})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </form>
+            @endif
         </div>
 
         <div class="card-body">
+
+
 
             <table class="table table-bordered">
                 <thead>
@@ -122,58 +151,65 @@
                 </div>
                 @if ($isAcceptable)
                     <div class="modal-body">
-                        <div class="card">
-                            <div class="card-body">
-                                <form id="user-special-net-form" method="POST" action="{{ route(App\WebRoute::ADMIN_USER_ACTIVATE_IN_SPEC_NET) }}">
-                                    @csrf
-                                    <input type="hidden" id="selected_user"  name="user">
-                                    <div class="input-group mt-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="basic-addon1">
-                                                <i class="fa fa-key"></i>
-                                            </span>
-                                        </div>
-                                        <input name="security_code" id="security_code" class="form-control form-input"
-                                        placeholder="{{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_SECURITY_CODE) }}">
-                                    </div>
-                                    <input class="custom-control-input" type="radio" id="netRadio0" name="selected_net" value="0">
-                                    <table class="table table-bordered mt-5">
-                                        <thead>
-                                            <tr>
-                                                <th colspan="3">
-                                                    <div class="input-group">
-                                                        <div class="input-group-prepend">
-                                                            <span class="input-group-text" id="basic-addon1">
-                                                                <i class="fas fa-search"></i>
-                                                            </span>
-                                                        </div>
-                                                        <input type="text" class="form-control form-input" id="group-search">
-                                                    </div>
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($nets as $net)
-                                            <tr class="group-table-row" value="{{ $net->user->username }} {{ $net->user->name }}">
-                                                <td>
-                                                    <div class="custom-control custom-radio">
-                                                        <input class="custom-control-input" type="radio" id="netRadio{{$net->id}}" name="selected_net" value="{{$net->id}}">
-                                                        <label for="netRadio{{$net->id}}" class="custom-control-label"></label>
-                                                    </div>
-                                                </td>
-                                                <td>{{ $net->user->username }} ({{ $net->user->name }})</td>
-                                                <td>
-                                                    @foreach (App\Utils\PeopleUtil::getNet($net->user) as $net_element)
-                                                        <i class="fa fa-user" style="color: {{ isset($net_element)? 'blue' : 'lightgray' }}"></i>
-                                                    @endforeach
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </form>
+                        @if (!App\Utils\SecurityUtil::IS_AVAILABLE(App\Utils\SecurityUtil::SECURITY_CASE_USER_ACTIVATION))
+                            <div class="alert alert-danger">
+                                <i class="icon fas fa-ban"></i>
+                                系统锁定，24小时后自动解锁
                             </div>
-                        </div>
+                        @else
+                            <div class="card">
+                                <div class="card-body">
+                                    <form id="user-special-net-form" method="POST" action="{{ route(App\WebRoute::ADMIN_USER_ACTIVATE_IN_SPEC_NET) }}">
+                                        @csrf
+                                        <input type="hidden" id="selected_user"  name="user">
+                                        <div class="input-group mt-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">
+                                                    <i class="fa fa-key"></i>
+                                                </span>
+                                            </div>
+                                            <input name="security_code" id="security_code" class="form-control form-input"
+                                            placeholder="{{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_SECURITY_CODE) }}">
+                                        </div>
+                                        <input class="custom-control-input" type="radio" id="netRadio0" name="selected_net" value="0">
+                                        <table class="table table-bordered mt-5">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="3">
+                                                        <div class="input-group">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text" id="basic-addon1">
+                                                                    <i class="fas fa-search"></i>
+                                                                </span>
+                                                            </div>
+                                                            <input type="text" class="form-control form-input" id="group-search">
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($nets as $net)
+                                                <tr class="group-table-row" value="{{ $net->user->username }} {{ $net->user->name }}">
+                                                    <td>
+                                                        <div class="custom-control custom-radio">
+                                                            <input class="custom-control-input" type="radio" id="netRadio{{$net->id}}" name="selected_net" value="{{$net->id}}">
+                                                            <label for="netRadio{{$net->id}}" class="custom-control-label"></label>
+                                                        </div>
+                                                    </td>
+                                                    <td>{{ $net->user->username }} ({{ $net->user->name }})</td>
+                                                    <td>
+                                                        @foreach (App\Utils\PeopleUtil::getNet($net->user) as $net_element)
+                                                            <i class="fa fa-user" style="color: {{ isset($net_element)? 'blue' : 'lightgray' }}"></i>
+                                                        @endforeach
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </form>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 @else
                     <div class="modal-body">
@@ -235,11 +271,20 @@
 @push('post-header-scripts')
     <script src="{{ asset('/js/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('/js/plugins/jquery-validation/additional-methods.min.js') }}"></script>
+    <!-- Select2 -->
+    <script src="{{ asset('/js/plugins/select2/js/select2.full.min.js')}}"></script>
+@endpush
+
+@push('post-styles')
+    <link rel="stylesheet" href="{{ asset('/css/plugins/select2/css/select2.min.css')}}">
+    {{-- <link rel="stylesheet" href="{{ asset('/css/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}"> --}}
 @endpush
 
 @push('post-body-scripts')
 <script>
     $(function () {
+        $('.select2').select2()
+
       $('#user-form').validate({
         rules: {
           name: {
@@ -265,7 +310,7 @@
             equalTo: '#password',
           },
           verifier_id: {
-              required: true
+              required: false
           }
         },
         messages: {
@@ -341,33 +386,6 @@
       });
     });
 
-    $(function () {
-      $('#user-form-active').validate({
-        rules: {
-            security_code: {
-                required: true,
-            },
-
-        },
-        messages: {
-            security_code: {
-                required: "请输入安全密码",
-            },
-        },
-        errorElement: 'span',
-        errorPlacement: function (error, element) {
-          error.addClass('invalid-feedback');
-          element.closest('.input-group').append(error);
-        },
-        highlight: function (element, errorClass, validClass) {
-          $(element).addClass('is-invalid');
-        },
-        unhighlight: function (element, errorClass, validClass) {
-          $(element).removeClass('is-invalid');
-        }
-      });
-    });
-
     $(document).ready(function() {
         $('#group-search').on('change, keyup', function(e) {
 
@@ -384,6 +402,10 @@
                 }
 
             })
+        })
+
+        $('#company_id').on('change', function() {
+            $('#company_select_form').submit();
         })
     })
 </script>

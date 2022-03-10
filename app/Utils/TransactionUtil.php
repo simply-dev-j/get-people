@@ -29,6 +29,32 @@ class TransactionUtil
     public const TRANSACTION_MONEY_ADJUST_BY_ROOT_RELEASED = 0x0E;
     public const TRANSACTION_MONEY_ADJUST_BY_ROOT_RELEASED_FROM_PEDNING = 0x0F;
 
+    /**
+     * Check if certian type of money is enough for transfering.
+     * @param User $user
+     * @param int $type
+     * @param int $amount
+     * @return boolean
+     */
+    public static function VERIFY_WORTH(User $user, $type, $amount):bool
+    {
+        $currentAmount = 0;
+
+        switch($type) {
+            case self::TYPE_RELEASED_FROM_PENDING:
+                $currentAmount = $user->released_from_pending;
+                break;
+            case self::TYPE_RELEASE:
+                $currentAmount = $user->released;
+                break;
+            case self::TYPE_WITHDRAWN:
+                $currentAmount = $user->withdrawn;
+                break;
+        }
+
+        return $currentAmount >= $amount;
+    }
+
     public static function CRETE_TRANSACTION(User $user, $money_type, $amount, User $ref_user1 = null, User $ref_user2 = null)
     {
         $transaction1 = null;
@@ -75,7 +101,7 @@ class TransactionUtil
                 break;
             case self::TRANSACTION_MONEY_RELEASE_FROM_PENDING_TO_RELEASE:
                 $transaction1 = self::CREATE_TRASANCTION_INSTANCE($user, self::TYPE_RELEASED_FROM_PENDING, -$amount, $user->released_from_pending, $money_type);
-                $transaction2 = self::CREATE_TRASANCTION_INSTANCE($user, self::TYPE_RELEASE, number_format($amount * 0.8, 2), $user->released, $money_type);
+                $transaction2 = self::CREATE_TRASANCTION_INSTANCE($user, self::TYPE_RELEASE, (int)($amount * 0.8), $user->released, $money_type);
                 break;
             case self::TRANSACTION_MONEY_RELEASE_TO_WITHDRAWN:
                 $transaction1 = self::CREATE_TRASANCTION_INSTANCE($user, self::TYPE_RELEASE, -$amount, $user->released, $money_type);

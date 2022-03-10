@@ -1,7 +1,9 @@
 @php
     $members = [];
+    $refOwner = null;
     if ($user) {
         $members = App\Utils\PeopleUtil::getBelongedMember($user);
+        $refOwner = App\Utils\PeopleUtil::getRefOwner($user);
     }
 @endphp
 
@@ -14,20 +16,31 @@
                 @endif
             </th>
         </tr>
-        <tr>
-            <td style="width: 150px">
-                @if (isset($members[0]))
-                    {{ $members[0]->username }} ({{ $members[0]->name }})
-                    {{ App\Utils\ConfigUtil::AMOUNT_OF_ONE() }}
-                @endif
-            </td>
-            <td style="width: 150px">
-                @if (isset($members[1]))
-                    {{ $members[1]->username }} ({{ $members[1]->name }})
-                    {{ App\Utils\ConfigUtil::AMOUNT_OF_ONE() }}
-                @endif
-            </td>
-        </tr>
+        @if ($showMember ?? false)
+            <tr>
+                <td style="width: 150px">
+                    @if (isset($members[0]))
+                        {{ $members[0]->username }} ({{ $members[0]->name }})
+                        {{ App\Utils\ConfigUtil::AMOUNT_OF_ONE() }}
+                    @endif
+                </td>
+                <td style="width: 150px">
+                    @if (isset($members[1]))
+                        {{ $members[1]->username }} ({{ $members[1]->name }})
+                        {{ App\Utils\ConfigUtil::AMOUNT_OF_ONE() }}
+                    @endif
+                </td>
+            </tr>
+        @else
+            <tr>
+                <td colspan="2">
+                    @if ($refOwner)
+                        {{ $refOwner->name ?? '' }}({{ $refOwner->username ?? '' }})
+                        {{ App\Utils\ConfigUtil::AMOUNT_OF_ONE() }}
+                    @endif
+                </td>
+            </tr>
+        @endif
         <tr>
             <td colspan="2">
                 推荐：{{ $user->owner->name ?? '' }}({{ $user->owner->username ?? '' }})

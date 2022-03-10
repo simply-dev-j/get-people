@@ -33,6 +33,8 @@ class LocaleConstants {
     public const FORM_CODE_CREATE_AT = 'form_code_create_at';
     public const FORM_CODE_CODE = 'form_code_code';
 
+    public const FORM_ADMIN_COMPANY_MANAGEMENT = 'form_admin_company_management';
+    public const FORM_ADMIN_COMPANY_ADD = 'form_admin_company_add';
     /**
      * Auth base
      */
@@ -44,6 +46,10 @@ class LocaleConstants {
     /**
      * Message
      */
+    public const MESSAGE_USER_ACTIVE_ALREADY = 'message_user_active_already';
+
     public const MESSAGE_CODE_DELETED = 'message_code_deleted';
+
+    public const MESSAGE_COMPANY_ADD_SUCCESS = 'message_company_add_success';
 }
 

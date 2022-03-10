@@ -24,26 +24,6 @@
                         </p>
                     </a>
                 </li>
-                {{-- Admin --}}
-                {{-- @if (auth()->user()->is_admin)
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-copy"></i>
-                            <p>
-                                管理页面
-                                <i class="fas fa-angle-left right"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{{ route(App\WebRoute::ADMIN_USER_INDEX) }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>用户管理</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                @endif --}}
                 {{-- Team --}}
                 <li class="nav-item">
                     <a href="#" class="nav-link">
@@ -53,13 +33,23 @@
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
-                    <ul class="nav nav-treeview">{{-- 분공사에만 유효 --}}
+                    <ul class="nav nav-treeview">
+                        {{-- root 또는 분공사에만 유효 --}}
                         <li class="nav-item">
-                            <a href="{{ route(App\WebRoute::TEAM_INDEX) }}" class="nav-link {{auth()->user()->id > 3 ? 'disabled' : ''}}">
+                            <a href="{{ route(App\WebRoute::TEAM_INDEX) }}" class="nav-link {{ App\Utils\UserUtil::isAdminOrCompany() ? '' : 'disabled' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>报单列表</p>
                             </a>
                         </li>
+                        {{-- root 에만 유효 --}}
+                        @if(App\Utils\UserUtil::isAdmin())
+                        <li>
+                            <a href="{{ route(App\WebRoute::ADMIN_COMPANY_INDEX) }}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_ADMIN_COMPANY_MANAGEMENT) }}</p>
+                            </a>
+                        </li>
+                        @endif
                         <li class="nav-item">
                             <a href="{{ route(App\WebRoute::CODE_INDEX) }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
@@ -74,32 +64,7 @@
                         </li>
                     </ul>
                 </li>
-                {{-- Center --}}
-                {{-- @if (auth()->user()->is_admin)
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-copy"></i>
-                            <p>
-                                业务管理
-                                <i class="fas fa-angle-left right"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{{ route(App\WebRoute::CENTER_REGISTER) }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>报单中心</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route(App\WebRoute::CENTER_INDEX) }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>报单列表</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                @endif --}}
+
                 {{-- Fund --}}
                 <li class="nav-item">
                     <a href="#" class="nav-link">
@@ -122,7 +87,7 @@
                                 <p> 资金转账</p>
                             </a>
                         </li>
-                        @if (auth()->user()->id == 1) {{-- root 에만 유효 --}}
+                        @if (App\Utils\UserUtil::isAdmin()) {{-- root 에만 유효 --}}
                             <li class="nav-item">
                                 <a href="{{ route(App\WebRoute::FUND_COMPANY_EDIT) }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>

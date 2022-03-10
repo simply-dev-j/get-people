@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Utils\ConfigUtil;
 use App\Utils\PeopleUtil;
+use App\Utils\SecurityUtil;
 use App\Utils\TransactionUtil;
+use App\Utils\UserUtil;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -14,7 +16,7 @@ class FundController extends Controller
     //
     public function conversionIndex()
     {
-        $needToFundTransferPermission = auth()->user()->id > 3 && auth()->user()->fund_transfer_status != 2;
+        $needToFundTransferPermission = !UserUtil::isAdminOrCompany() && auth()->user()->fund_transfer_status != 2;
         return view('fund_conversion', compact('needToFundTransferPermission'));
     }
 
@@ -29,9 +31,14 @@ class FundController extends Controller
 
         switch($validated['conversion_method']) {
             case 1:
+                if (!TransactionUtil::VERIFY_WORTH(auth()->user(), TransactionUtil::TYPE_RELEASED_FROM_PENDING, $amount)) {
+                    flash('无可用积分，不能转换', 'danger');
+                    return redirect()->back();
+                }
+
                 // released_from_pending to release
                 auth()->user()->released_from_pending -= $amount;
-                auth()->user()->released += number_format($amount * 0.8, 2);
+                auth()->user()->released += (int)($amount * 0.8);
                 auth()->user()->save();
 
                 TransactionUtil::CRETE_TRANSACTION(
@@ -41,6 +48,10 @@ class FundController extends Controller
                 );
                 break;
             case 2:
+                if (!TransactionUtil::VERIFY_WORTH(auth()->user(), TransactionUtil::TYPE_RELEASE, $amount)) {
+                    flash('无可用积分，不能转换', 'danger');
+                    return redirect()->back();
+                }
                 // release to withdrawn
                 auth()->user()->released -= $amount;
                 auth()->user()->withdrawn += $amount;
@@ -54,7 +65,7 @@ class FundController extends Controller
                 break;
         }
 
-        flash('转账成功', 'success');
+        flash('资金转换成功', 'success');
 
         return redirect()->back()->withInput();
     }
@@ -92,11 +103,20 @@ class FundController extends Controller
 
     public function conversionRequestApprove(Request $request, User $user)
     {
-        PeopleUtil::onAcceptFundTransferRequest($user);
+        if (UserUtil::isAdminOrCompany($user)) {
 
-        $user->update([
-            'fund_transfer_status' => 2
-        ]);
+            if ( !TransactionUtil::VERIFY_WORTH($user, TransactionUtil::TYPE_RELEASED_FROM_PENDING, ConfigUtil::AMOUNT_OF_ACCEPT_FUND_TRANSFER_REQUEST())) {
+                flash('无可用积分，不能转换', 'danger');
+                return redirect()->back();
+            }
+
+            PeopleUtil::onAcceptFundTransferRequest($user);
+
+            $user->update([
+                'fund_transfer_status' => 2
+            ]);
+
+        }
 
         return redirect()->back();
     }
@@ -114,13 +134,20 @@ class FundController extends Controller
             'security_code' => 'required'
         ]);
 
-        $receiver = User::where('name', $validated['transfer_receiver'])->whereIn('id', [2, 3])->first();
+        // securify challeng
+        if (!SecurityUtil::SECURITY_CHALLENGE(SecurityUtil::SECURITY_CASE_FUND_TRANSFER, $validated['security_code'])){
+            flash('错误安全码', 'danger');
+            return redirect()->back()->withInput();
+        }
 
-        // if not exist
-        // if($receiver == null) {
-        //     flash('收款人不存在', 'danger');
-        //     return redirect()->back()->withInput();
-        // }
+        // 분공사들 사이의 전송 차단.
+        // 현재 사용자가 분공사인 경우 차단.
+        if (UserUtil::isCompany()) {
+            flash('分公司不能转积分', 'danger');
+            return redirect()->back()->withInput();
+        }
+
+        $receiver = User::where('name', $validated['transfer_receiver'])->whereIn('id', [2, 3])->first();
 
         // if receiver is not a sub-company
         if ($receiver == null) {
@@ -128,13 +155,12 @@ class FundController extends Controller
             return redirect()->back()->withInput();
         }
 
-        // securify code is wrong
-        if(auth()->user()->security_code != $validated['security_code']) {
-            flash('错误安全码', 'danger');
-            return redirect()->back()->withInput();
-        }
-
         $amount = $validated['transfer_amount'];
+
+        if ( !TransactionUtil::VERIFY_WORTH(auth()->user(), TransactionUtil::TYPE_WITHDRAWN, $amount)) {
+            flash('无可用积分，不能转换', 'danger');
+            return redirect()->back();
+        }
 
         $receiver->increment('withdrawn', $validated['transfer_amount']);
         auth()->user()->decrement('withdrawn', $validated['transfer_amount']);
@@ -178,13 +204,19 @@ class FundController extends Controller
         $amount = $all['transfer_amount'];
         $fundType = $all['fund_type'];
 
-        // securify code is wrong
-        if(auth()->user()->security_code != $all['security_code']) {
+        // securify challeng
+        if (!SecurityUtil::SECURITY_CHALLENGE(SecurityUtil::SECURITY_CASE_FUND_COMPANY_EDIT, $all['security_code'])){
             flash('错误安全码', 'danger');
             return redirect()->back()->withInput();
         }
 
         if ($fundType == TransactionUtil::TYPE_WITHDRAWN) {
+
+            if ( !TransactionUtil::VERIFY_WORTH($company, TransactionUtil::TYPE_WITHDRAWN, -$amount)) {
+                flash('无可用积分，不能转换', 'danger');
+                return redirect()->back();
+            }
+
             $company->increment('withdrawn', $amount);
 
             TransactionUtil::CRETE_TRANSACTION(
@@ -194,6 +226,12 @@ class FundController extends Controller
                 auth()->user()
             );
         } else if ($fundType == TransactionUtil::TYPE_RELEASE) {
+
+            if ( !TransactionUtil::VERIFY_WORTH($company, TransactionUtil::TYPE_RELEASE, -$amount)) {
+                flash('无可用积分，不能转换', 'danger');
+                return redirect()->back();
+            }
+
             $company->increment('released', $amount);
 
             TransactionUtil::CRETE_TRANSACTION(
@@ -203,6 +241,12 @@ class FundController extends Controller
                 auth()->user()
             );
         } else if ($fundType == TransactionUtil::TYPE_RELEASED_FROM_PENDING) {
+
+            if ( !TransactionUtil::VERIFY_WORTH($company, TransactionUtil::TYPE_RELEASED_FROM_PENDING, -$amount)) {
+                flash('无可用积分，不能转换', 'danger');
+                return redirect()->back();
+            }
+
             $company->increment('released_from_pending', $amount);
 
             TransactionUtil::CRETE_TRANSACTION(
@@ -233,26 +277,50 @@ class FundController extends Controller
 
         $member = User::find($all['member_id']);
         $amount = $all['transfer_amount'];
+        $fund_type = $all['fund_type'];
 
-        // securify code is wrong
-        if(auth()->user()->security_code != $all['security_code']) {
+        // securify challeng
+        if (!SecurityUtil::SECURITY_CHALLENGE(SecurityUtil::SECURITY_CASE_FUND_COMPANY_ADJUST, $all['security_code'])){
             flash('错误安全码', 'danger');
             return redirect()->back()->withInput();
         }
 
-        $member->decrement('withdrawn', $amount);
-        auth()->user()->increment('withdrawn', $amount);
+        if ( !TransactionUtil::VERIFY_WORTH($member, $fund_type, $amount)) {
+            flash('无可用积分，不能转换', 'danger');
+            return redirect()->back();
+        }
+
+        $moneyType = "";
+        $transactionType = "";
+
+        switch($fund_type) {
+            case TransactionUtil::TYPE_WITHDRAWN:
+                $moneyType = "withdrawn";
+                $transactionType = TransactionUtil::TRANSACTION_MONEY_ADJUST_BY_ROOT_WITHDRAWN;
+                break;
+            case TransactionUtil::TYPE_RELEASE:
+                $transactionType = TransactionUtil::TRANSACTION_MONEY_ADJUST_BY_ROOT_RELEASED;
+                $moneyType = "released";
+                break;
+            case TransactionUtil::TYPE_RELEASED_FROM_PENDING:
+                $transactionType = TransactionUtil::TRANSACTION_MONEY_ADJUST_BY_ROOT_RELEASED_FROM_PEDNING;
+                $moneyType = "released_from_pending";
+                break;
+        }
+
+        $member->decrement($moneyType, $amount);
+        auth()->user()->increment($moneyType, $amount);
 
         TransactionUtil::CRETE_TRANSACTION(
             $member,
-            TransactionUtil::TRANSACTION_MONEY_ADJUST_BY_ROOT_WITHDRAWN,
+            $transactionType,
             -$amount,
             auth()->user()
         );
 
         TransactionUtil::CRETE_TRANSACTION(
             auth()->user(),
-            TransactionUtil::TRANSACTION_MONEY_ADJUST_BY_ROOT_WITHDRAWN,
+            $transactionType,
             $amount,
             $member
         );
@@ -275,14 +343,19 @@ class FundController extends Controller
     {
         $all = $request->all();
 
-        // securify code is wrong
-        if(auth()->user()->security_code != $all['security_code']) {
+        // securify challeng
+        if (!SecurityUtil::SECURITY_CHALLENGE(SecurityUtil::SECURITY_CASE_FUND_COMPANY_TRANSFER, $all['security_code'])){
             flash('错误安全码', 'danger');
             return redirect()->back()->withInput();
         }
 
         $company = User::find($all['company_id']);
         $amount = $all['transfer_amount'];
+
+        if ( !TransactionUtil::VERIFY_WORTH(auth()->user(), TransactionUtil::TYPE_WITHDRAWN, $amount)) {
+            flash('无可用积分，不能转换', 'danger');
+            return redirect()->back();
+        }
 
         $company->increment('withdrawn', $amount);
         auth()->user()->decrement('withdrawn', $amount);

@@ -36,7 +36,7 @@
                             @include('partials.form.user_register_form', [
                                 'showCodeInput' => false,
                                 'subCompanies' => $subCompanies,
-                                'showVerifier' => $subCompanies->count() == 2
+                                'showVerifier' => $subCompanies->count() > 0
                                 ])
                         </form>
                     </div>
@@ -86,13 +86,23 @@
                         </td>
                         <td>
                             @if($member->active)
-                                <a href="{{ route(App\WebRoute::TEAM_NET, ['user' => $member, 'showMember' => true]) }}">
-                                @foreach (App\Utils\PeopleUtil::getBelongedMember($member) as $member_element)
-                                    @if (isset($member_element))
-                                        {{ $member_element->username }} ({{ $member_element->name }})<br>
-                                    @endif
-                                @endforeach
+                                @php
+                                    $refOwner = App\Utils\PeopleUtil::getRefOwner($member);
+                                @endphp
+
+                                @if ($refOwner)
+
+                                <a href="{{ route(App\WebRoute::TEAM_NET, ['user' => $refOwner, 'showMember' => true]) }}">
+                                    {{-- @foreach (App\Utils\PeopleUtil::getBelongedMember($member) as $member_element)
+                                        @if (isset($member_element))
+                                            {{ $member_element->username }} ({{ $member_element->name }})<br>
+                                        @endif
+                                    @endforeach --}}
+
+                                    {{ $refOwner->name ?? '' }}({{ $refOwner->username ?? '' }})
                                 </a>
+
+                                @endif
                             @endif
                         </td>
                         <td>{{ $member->created_at }}</td>
@@ -144,7 +154,7 @@
             equalTo: '#password',
           },
           verifier_id: {
-              required: true
+              required: false
           }
         },
         messages: {

@@ -50,6 +50,10 @@
                 </section>
 
                 <section class="content">
+                    @yield('custom-message')
+                </section>
+
+                <section class="content">
                     @yield('content')
                 </section>
             </div>
@@ -67,5 +71,31 @@
         @endif
     </div>
 
+    <div class="overlay-wrapper custom-overlay-wrapper d-none">
+        <div class="overlay">
+            <i class="fa fa-3x fa-spinner fa-spin"></i>
+        </div>
+    </div>
+
     @stack('post-body-scripts')
+
+    <script>
+        $(document).ready(function() {
+            $('form').on('submit', function(e) {
+                var isValid = false;
+
+                try {
+                    // if the jquery form validation is applied to form, then check form is valid.
+                    isValid = $(this).valid()
+                } catch (e) {
+                    // if not, set it as validated because no need to check its validation statue, directly submit.
+                    isValid = true
+                }
+
+                if (isValid) {
+                    $('.overlay-wrapper').removeClass('d-none')
+                }
+            })
+        })
+    </script>
 </body>
