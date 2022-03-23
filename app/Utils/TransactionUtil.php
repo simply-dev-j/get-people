@@ -24,11 +24,11 @@ class TransactionUtil
     public const TRANSACTION_MONEY_WITHDRAWN_RECEIVE = 0x09;
     public const TRANSACTION_MONEY_BY_REGISTRATION_OF_ONE_FOR_ROOT_WITHDRAWN= 0x0A;
     public const TRANSACTION_MONEY_BY_REGISTRATION_OF_ONE_FOR_ROOT_RELEASED= 0x0B;
-    public const TRANSACTION_MONEY_BY_ACCEPT_FUND_TRANSFER_REQUEST = 0x0C;
     public const TRANSACTION_MONEY_ADJUST_BY_ROOT_WITHDRAWN = 0x0D;
     public const TRANSACTION_MONEY_ADJUST_BY_ROOT_RELEASED = 0x0E;
     public const TRANSACTION_MONEY_ADJUST_BY_ROOT_RELEASED_FROM_PEDNING = 0x0F;
-
+    public const TRANSACTION_MONEY_BY_ACCEPT_FUND_TRANSFER_REQUEST_RELEASED_FROM_PENDING = 0x0C;
+    public const TRANSACTION_MONEY_BY_ACCEPT_FUND_TRANSFER_REQUEST_WITHDRAWN = 0x10;
     /**
      * Check if certian type of money is enough for transfering.
      * @param User $user
@@ -126,8 +126,13 @@ class TransactionUtil
                 $newMoney = true;
 
                 break;
-            case self::TRANSACTION_MONEY_BY_ACCEPT_FUND_TRANSFER_REQUEST:
+            case self::TRANSACTION_MONEY_BY_ACCEPT_FUND_TRANSFER_REQUEST_RELEASED_FROM_PENDING:
                 $transaction1 = self::CREATE_TRASANCTION_INSTANCE($user, self::TYPE_RELEASED_FROM_PENDING, $amount, $user->released_from_pending, $money_type);
+                self::APPLY_REF_USERS($transaction1, $ref_user1, $ref_user2);
+                break;
+
+            case self::TRANSACTION_MONEY_BY_ACCEPT_FUND_TRANSFER_REQUEST_WITHDRAWN:
+                $transaction1 = self::CREATE_TRASANCTION_INSTANCE($user, self::TYPE_WITHDRAWN, $amount, $user->withdrawn, $money_type);
                 self::APPLY_REF_USERS($transaction1, $ref_user1, $ref_user2);
                 break;
 

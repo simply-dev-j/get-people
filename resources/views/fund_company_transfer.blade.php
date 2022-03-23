@@ -39,7 +39,7 @@
                     </div>
                     <div class="form-group">
                         <label>分公司</label>
-                        <select class="form-control" name="company_id" id="company_id">
+                        <select class="form-control select2" name="company_id" id="company_id">
                             <option class="d-none" disabled selected withdrawn="0">请选择分公司</option>
                             @foreach ($subCompanies as $subCompany)
                                 <option value="{{$subCompany->id}}">{{$subCompany->name}} ({{$subCompany->username}})</option>
@@ -74,9 +74,22 @@
     <script src="{{ asset('/js/plugins/jquery-validation/additional-methods.min.js') }}"></script>
 @endpush
 
+@push('post-header-scripts')
+    <script src="{{ asset('/js/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('/js/plugins/jquery-validation/additional-methods.min.js') }}"></script>
+    <!-- Select2 -->
+    <script src="{{ asset('/js/plugins/select2/js/select2.full.min.js')}}"></script>
+@endpush
+
+@push('post-styles')
+    <link rel="stylesheet" href="{{ asset('/css/plugins/select2/css/select2.min.css')}}">
+    {{-- <link rel="stylesheet" href="{{ asset('/css/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}"> --}}
+@endpush
+
 @push('post-body-scripts')
 <script>
     $(function () {
+        $('.select2').select2()
       $('#fund_form').validate({
         rules: {
             company_id: {

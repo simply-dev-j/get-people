@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Utils\PeopleUtil;
 use App\Utils\UserUtil;
 use Illuminate\Http\Request;
+use Symfony\Component\Console\Input\Input;
 
 class TeamController extends Controller
 {
@@ -28,6 +29,8 @@ class TeamController extends Controller
         $people = $people->orderBy('id', 'desc');
 
         $people = $people->paginate(20);
+
+        $people->appends(request()->query());
 
         $nets = Entry::where('owner_id', null)->get();
 

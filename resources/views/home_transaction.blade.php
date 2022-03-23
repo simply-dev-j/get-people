@@ -102,7 +102,10 @@
                                         @case(App\Utils\TransactionUtil::TRANSACTION_MONEY_BY_REGISTRATION_OF_ONE_FOR_ROOT_RELEASED)
                                         购物积分 :
                                             @break
-                                        @case(App\Utils\TransactionUtil::TRANSACTION_MONEY_BY_ACCEPT_FUND_TRANSFER_REQUEST)
+                                        @case(App\Utils\TransactionUtil::TRANSACTION_MONEY_BY_ACCEPT_FUND_TRANSFER_REQUEST_RELEASED_FROM_PENDING)
+                                        购车积分 :
+                                            @break
+                                        @case(App\Utils\TransactionUtil::TRANSACTION_MONEY_BY_ACCEPT_FUND_TRANSFER_REQUEST_WITHDRAWN)
                                         购车积分 :
                                             @break
                                         @case(App\Utils\TransactionUtil::TRANSACTION_MONEY_ADJUST_BY_ROOT_WITHDRAWN)

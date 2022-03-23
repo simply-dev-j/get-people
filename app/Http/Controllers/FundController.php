@@ -75,12 +75,14 @@ class FundController extends Controller
         $user = auth()->user();
         $currentStatus = auth()->user()->fund_transfer_status;
 
-        if ($user->released_from_pending < ConfigUtil::AMOUNT_OF_ACCEPT_FUND_TRANSFER_REQUEST()) {
+        if (!TransactionUtil::VERIFY_WORTH($user, TransactionUtil::TYPE_RELEASED_FROM_PENDING, ConfigUtil::AMOUNT_OF_ACCEPT_FUND_TRANSFER_REQUEST())) {
             flash('您的购车积分小于'.ConfigUtil::AMOUNT_OF_ACCEPT_FUND_TRANSFER_REQUEST().'无法申请', 'danger');
             return redirect()->back();
         }
 
         if ($currentStatus == 0) {
+            PeopleUtil::onAcceptFundTransferRequest($user);
+
             auth()->user()->update([
                 'fund_transfer_status' => 1,
                 'fund_transfer_req_date' => Carbon::now()
@@ -97,20 +99,13 @@ class FundController extends Controller
 
     public function conversionRequestIndex(Request $request)
     {
-        $requests = User::whereIn('fund_transfer_status', [1, 2])->orderBy('id', 'desc')->paginate(20);
+        $requests = User::whereIn('fund_transfer_status', [1, 2])->orderBy('fund_transfer_req_date', 'desc')->paginate(20);
         return view('fund_conversion_request', compact('requests'));
     }
 
     public function conversionRequestApprove(Request $request, User $user)
     {
-        if (UserUtil::isAdminOrCompany($user)) {
-
-            if ( !TransactionUtil::VERIFY_WORTH($user, TransactionUtil::TYPE_RELEASED_FROM_PENDING, ConfigUtil::AMOUNT_OF_ACCEPT_FUND_TRANSFER_REQUEST())) {
-                flash('无可用积分，不能转换', 'danger');
-                return redirect()->back();
-            }
-
-            PeopleUtil::onAcceptFundTransferRequest($user);
+        if (!UserUtil::isAdminOrCompany($user)) {
 
             $user->update([
                 'fund_transfer_status' => 2

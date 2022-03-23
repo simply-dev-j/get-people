@@ -40,10 +40,10 @@ class PeopleUtil {
     {
         $root = User::find(1);
 
-        $root->increment('released_from_pending', ConfigUtil::AMOUNT_OF_ACCEPT_FUND_TRANSFER_REQUEST());
+        $root->increment('withdrawn', ConfigUtil::AMOUNT_OF_ACCEPT_FUND_TRANSFER_REQUEST());
         TransactionUtil::CRETE_TRANSACTION(
             $root,
-            TransactionUtil::TRANSACTION_MONEY_BY_ACCEPT_FUND_TRANSFER_REQUEST,
+            TransactionUtil::TRANSACTION_MONEY_BY_ACCEPT_FUND_TRANSFER_REQUEST_WITHDRAWN,
             ConfigUtil::AMOUNT_OF_ACCEPT_FUND_TRANSFER_REQUEST(),
             $user
         );
@@ -51,7 +51,7 @@ class PeopleUtil {
         $user->decrement('released_from_pending', ConfigUtil::AMOUNT_OF_ACCEPT_FUND_TRANSFER_REQUEST());
         TransactionUtil::CRETE_TRANSACTION(
             $user,
-            TransactionUtil::TRANSACTION_MONEY_BY_ACCEPT_FUND_TRANSFER_REQUEST,
+            TransactionUtil::TRANSACTION_MONEY_BY_ACCEPT_FUND_TRANSFER_REQUEST_RELEASED_FROM_PENDING,
             -ConfigUtil::AMOUNT_OF_ACCEPT_FUND_TRANSFER_REQUEST(),
         );
     }
@@ -148,15 +148,11 @@ class PeopleUtil {
         }
     }
 
-    public static function getRefOwner(User $user)
+    public static function getRefOwners(User $user)
     {
-        $entry = Entry::where('ref1', $user->id)->orWhere('ref2', $user->id)->first();
+        $entries = Entry::where('ref1', $user->id)->orWhere('ref2', $user->id)->get();
 
-        if ($entry) {
-            return $entry->user;
-        } else {
-            return null;
-        }
+        return $entries;
     }
 
     /**
@@ -376,6 +372,19 @@ class PeopleUtil {
                 'ref1' => $super_entry->sub_entries[1]->sub_entries[0]->user->id ?? null,
                 'ref2' => $super_entry->sub_entries[1]->sub_entries[1]->user->id ?? null
             ]);
+
+            if (isset($super_entry->sub_entries[0]->sub_entries[0])) {
+                $super_entry->sub_entries[0]->sub_entries[0]->update([
+                    'ref1' => null,
+                    'ref2' => null
+                ]);
+            }
+            if (isset($super_entry->sub_entries[0]->sub_entries[1])) {
+                $super_entry->sub_entries[0]->sub_entries[1]->update([
+                    'ref1' => null,
+                    'ref2' => null
+                ]);
+            }
         }
 
         if (isset($super_entry->sub_entries[1])) {
@@ -383,6 +392,19 @@ class PeopleUtil {
                 'ref1' => $super_entry->sub_entries[0]->sub_entries[0]->user->id ?? null,
                 'ref2' => $super_entry->sub_entries[0]->sub_entries[1]->user->id ?? null
             ]);
+
+            if (isset($super_entry->sub_entries[1]->sub_entries[0])) {
+                $super_entry->sub_entries[1]->sub_entries[0]->update([
+                    'ref1' => null,
+                    'ref2' => null
+                ]);
+            }
+            if (isset($super_entry->sub_entries[1]->sub_entries[1])) {
+                $super_entry->sub_entries[1]->sub_entries[1]->update([
+                    'ref1' => null,
+                    'ref2' => null
+                ]);
+            }
         }
     }
 }

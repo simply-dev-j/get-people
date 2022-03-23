@@ -1,9 +1,9 @@
 @php
     $members = [];
-    $refOwner = null;
+    $refOwnerEntries = [];
     if ($user) {
         $members = App\Utils\PeopleUtil::getBelongedMember($user);
-        $refOwner = App\Utils\PeopleUtil::getRefOwner($user);
+        $refOwnerEntries = App\Utils\PeopleUtil::getRefOwners($user);
     }
 @endphp
 
@@ -34,10 +34,12 @@
         @else
             <tr>
                 <td colspan="2">
-                    @if ($refOwner)
-                        {{ $refOwner->name ?? '' }}({{ $refOwner->username ?? '' }})
-                        {{ App\Utils\ConfigUtil::AMOUNT_OF_ONE() }}
-                    @endif
+                    @foreach($refOwnerEntries as $entry)
+                        <div>
+                            {{ $entry->user->name ?? '' }}({{ $entry->user->username ?? '' }})
+                            {{ App\Utils\ConfigUtil::AMOUNT_OF_ONE() }}
+                        </div>
+                    @endforeach
                 </td>
             </tr>
         @endif

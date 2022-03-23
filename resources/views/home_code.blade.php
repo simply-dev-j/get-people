@@ -87,22 +87,16 @@
                         <td>
                             @if($member->active)
                                 @php
-                                    $refOwner = App\Utils\PeopleUtil::getRefOwner($member);
+                                    $refOwnerEntries = App\Utils\PeopleUtil::getRefOwners($member);
                                 @endphp
 
-                                @if ($refOwner)
-
-                                <a href="{{ route(App\WebRoute::TEAM_NET, ['user' => $refOwner, 'showMember' => true]) }}">
-                                    {{-- @foreach (App\Utils\PeopleUtil::getBelongedMember($member) as $member_element)
-                                        @if (isset($member_element))
-                                            {{ $member_element->username }} ({{ $member_element->name }})<br>
-                                        @endif
-                                    @endforeach --}}
-
-                                    {{ $refOwner->name ?? '' }}({{ $refOwner->username ?? '' }})
-                                </a>
-
-                                @endif
+                                @foreach ($refOwnerEntries as $entry)
+                                <div>
+                                    <a href="{{ route(App\WebRoute::TEAM_NET, ['user' => $entry->user, 'showMember' => true]) }}">
+                                        {{ $entry->user->name ?? '' }}({{ $entry->user->username ?? '' }})
+                                    </a>
+                                </div>
+                                @endforeach
                             @endif
                         </td>
                         <td>{{ $member->created_at }}</td>
@@ -126,9 +120,22 @@
     <script src="{{ asset('/js/plugins/jquery-validation/additional-methods.min.js') }}"></script>
 @endpush
 
+@push('post-header-scripts')
+    <script src="{{ asset('/js/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('/js/plugins/jquery-validation/additional-methods.min.js') }}"></script>
+    <!-- Select2 -->
+    <script src="{{ asset('/js/plugins/select2/js/select2.full.min.js')}}"></script>
+@endpush
+
+@push('post-styles')
+    <link rel="stylesheet" href="{{ asset('/css/plugins/select2/css/select2.min.css')}}">
+    {{-- <link rel="stylesheet" href="{{ asset('/css/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}"> --}}
+@endpush
+
 @push('post-body-scripts')
 <script>
     $(function () {
+        $('.select2').select2()
       $('#user-form').validate({
         rules: {
           name: {

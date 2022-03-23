@@ -91,12 +91,7 @@
 
 @if ($showVerifier)
 <div class="input-group mt-3">
-    <div class="input-group-prepend">
-        <span class="input-group-text" id="basic-addon1">
-            <i class="fa fa-user"></i>
-        </span>
-    </div>
-    <select class="form-control" name="verifier_id" id="verifier_id">
+    <select class="form-control select2 " name="verifier_id" id="verifier_id">
         <option class="d-none" disabled selected>分公司</option>
         @foreach ($subCompanies as $subCompany)
             <option value="{{$subCompany->id}}">{{$subCompany->username}} ({{$subCompany->name}})</option>
