@@ -1,6 +1,6 @@
 {
-    "/css/extension.css": "/css/extension.css",
-    "/css/app.css": "/css/app.css",
-    "/js/vendor.js": "/js/vendor.js",
-    "/js/app.js": "/js/app.js"
+    "/css/extension.css": "/css/extension.css?id=bd9767d63f6bc916aeaa",
+    "/css/app.css": "/css/app.css?id=f4fb6dc59c8ad0db8bb0",
+    "/js/vendor.js": "/js/vendor.js?id=87d78457f460a4fb67bd",
+    "/js/app.js": "/js/app.js?id=0d1ca4a6efdc43ffb4a0"
 }

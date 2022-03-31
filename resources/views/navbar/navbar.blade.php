@@ -1,3 +1,6 @@
+@php
+    $showBackButton = $showBackButton ?? true;
+@endphp
 {{-- <div class="navbar-container">
     <div class="navbar">
         <div class="avatar">
@@ -24,12 +27,25 @@
 </div> --}}
 
 <!-- Navbar -->
-<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+<nav class="main-header navbar navbar-expand nav-dark-blue">
     <!-- Left navbar links -->
-    <ul class="navbar-nav">
+    {{-- <ul class="navbar-nav">
       <li class="nav-item">
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
-    </ul>
+    </ul> --}}
+    @if ($showBackButton)
+    <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" back-link href="{{ route(App\WebRoute::HOME_INDEX) }}" role="button"><i class="fas fa-arrow-left fa-lg"></i></a>
+        </li>
+      </ul>
+    @endif
+
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{{ route(App\WebRoute::HOME_INDEX) }}" role="button"><i class="fas fa-home fa-lg"></i></a>
+        </li>
+      </ul>
   </nav>
   <!-- /.navbar -->

@@ -32,6 +32,7 @@ table {
 }
 .content-wrapper {
     height: auto;
+    background-color: transparent;
 }
 li.page-link.disabled {
     color: lightgray;
@@ -52,4 +53,99 @@ li.page-link.active {
 
 .select2-container {
     width: 100% !important;
+}
+
+.nav-dark-blue {
+    background-color: #2e476f;
+    border: none;
+    a {
+        color: white;
+    }
+}
+
+.main-footer {
+    padding: 2px;
+    border: none;
+    background-color: black;
+    text-align: center;
+    font-weight: bold;
+    a {
+        color: white;
+    }
+}
+
+.content-header {
+    color: white;
+    font-weight: bold;
+}
+
+.pagination {
+    width: fit-content;
+    max-width: 100%;
+    overflow: scroll;
+}
+
+// custom components
+.wrapper {
+    background-image: url('/img/background.jpg');
+    background-position: bottom;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.home-avatar {
+    img {
+        width: 160px;
+        height: 160px;
+        border: 2px solid #000;
+        border-radius: 50%;
+    }
+}
+
+.home-title {
+    color: black;
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 25px;
+    color: white;
+}
+
+.item-container {
+    .item {
+        font-size: 25px;
+        color: white;
+        text-align: center;
+        padding: 10px;
+        margin-top: 10px;
+        font-weight: bold;
+        box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
+
+        a {
+            color: white;
+        }
+
+        .item-footer {
+            margin: 0px -10px -10px -10px;
+            font-size: 15px;
+            background-color: rgba(255, 255, 255, .3);
+        }
+    }
+
+    .item-yellow {
+        background-color: #ffbe58;
+    }
+
+    .item-red {
+        background-color: #ef6c7e;
+    }
+
+    .item-green {
+        background-color: #52cf95;
+    }
+
+    .item-blue {
+        background-color: #60b5e4;
+    }
 }

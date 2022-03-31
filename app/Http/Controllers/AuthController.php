@@ -118,6 +118,11 @@ class AuthController extends Controller
         return redirect(route(WebRoute::AUTH_LOGIN));
     }
 
+    public function home()
+    {
+        return view('auth_home');
+    }
+
     public function profile(Request $request)
     {
         return view('auth_profile');

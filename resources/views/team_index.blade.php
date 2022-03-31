@@ -310,7 +310,7 @@
             equalTo: '#password',
           },
           verifier_id: {
-              required: false
+              required: true
           }
         },
         messages: {

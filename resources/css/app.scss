@@ -25,7 +25,7 @@ body {
 
     .auth-layout {
         background-image: url('/img/background.jpg');
-        background-position: top;
+        background-position: bottom;
         background-repeat: no-repeat;
         background-size: cover;
 
@@ -55,17 +55,17 @@ body {
 // customization of bootstrap default
 
 .form-input {
-    border-radius: 0px !important;
+    border-radius: inherit;
     margin-bottom: 0.5em;
     padding: 10px;
     border: none;
-    background-color: #3c8dbc ;
+    background-image: linear-gradient(to right, #839ec7 , white);
     color: white;
     font-size: $default-font-size;
     min-height: 38px;
     &:focus {
         outline: none;
-        background-color: #3c8dbc ;
+        background-image: linear-gradient(to right, #839ec7 , white);
         box-shadow: none;
         color: white;
     }
@@ -83,55 +83,105 @@ body {
     }
 }
 
-.input-group-prepend {
-    border: none;
-    border-radius: 0px;
-    background-color: #3c8dbc ;
+.form-button {
+    @extend .form-input;
 
-    .input-group-text{
-        border: none;
-        border-radius: 0px;
-        background-color: #3c8dbc ;
-        color: white;
+    background-image: none;
+    background-color: white;
+    color: #080899;
+    font-weight: bold;
+}
+
+.input-group {
+    border-radius: 10px;
+}
+
+.input-group-prepend {
+    text-align: center;
+    border: none;
+    border-radius: inherit !important;
+    border-top-right-radius: inherit !important;
+    border-bottom-right-radius: inherit !important;
+    background-color: white ;
+    z-index: 1;
+
+    & + .form-input {
+        margin-left: -10px;
+        padding-left: 10px + 10px;
+        z-index: 0;
+
+        &:focus {
+            z-index: 0;
+        }
     }
 
-    &::after {
-        content: '';
-        width: 2px;
-        background-color: white;
-        margin: 0.35rem 0px;
+    .input-group-text{
+        text-align: center;
+        justify-content: space-between;
+        border: none;
+        border-radius: inherit;
+        border-top-right-radius: inherit !important;
+        border-bottom-right-radius: inherit !important;
+        background-color: white ;
+        color: #080899;
+        font-weight: bold;
+        font-size: $default-font-size;
+        min-width: 4rem;
     }
 }
 
-.btn {
-    border-radius: 0px !important;
-    margin-bottom: 0.5em;
-    padding: 10px;
-    border: none;
-    background-color: #3c8dbc ;
-    font-size: $default-font-size;
-    min-height: 38px;
+/* CSS */
+.custom-btn {
+  background-color: #0078d0;
+  border: 0;
+  border-radius: 56px;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: system-ui,-apple-system,system-ui,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue",sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  outline: 0;
+  padding: 10px 21px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  transition: all .3s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
 
-    &:focus {
-        background-color: #3c8dbc ;
-    }
+.custom-btn:before {
+  background-color: initial;
+  background-image: linear-gradient(#fff 0, rgba(255, 255, 255, 0) 100%);
+  border-radius: 125px;
+  content: "";
+  height: 50%;
+  left: 4%;
+  opacity: .5;
+  position: absolute;
+  top: 0;
+  transition: all .3s;
+  width: 92%;
+}
 
-    &.btn-action {
-        float: right;
-        background: none;
-        padding: 0px;
-        &:focus {
-            border: none;
-            outline: none;
-            box-shadow: none;
-        }
-    }
+.custom-btn:hover {
+  box-shadow: rgba(255, 255, 255, .2) 0 3px 15px inset, rgba(0, 0, 0, .1) 0 3px 5px, rgba(0, 0, 0, .1) 0 10px 13px;
+  transform: scale(1.05);
+}
+
+@media (min-width: 768px) {
+  .custom-btn {
+    padding: 16px 48px;
+  }
 }
 
 .card {
     border-radius: 0px !important;
+    border: none;
     margin-bottom: 0.5em;
-    background-color: rgba(0,0,0,0.5);
+    background-color: transparent;
     color: white;
 }
 

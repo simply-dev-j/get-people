@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function() {
 
     // home
     Route::get('/home', [HomeController::class, 'index'])->name(WebRoute::HOME_INDEX);
+    Route::get('/home/money', [HomeController::class, 'money_index'])->name(WebRoute::HOME_MONEY);
 
     // code
     Route::any('/code', [HomeController::class, 'codeIndex'])->name(WebRoute::CODE_INDEX);
@@ -60,6 +61,7 @@ Route::middleware('auth')->group(function() {
 
     // team management
     Route::prefix('team')->group(function() {
+        Route::any('/home', [TeamController::class, 'home'])->name(WebRoute::TEAM_HOME);
         Route::any('/', [TeamController::class, 'index'])->name(WebRoute::TEAM_INDEX);
         Route::any('/net/{user?}', [TeamController::class, 'netIndex'])->name(WebRoute::TEAM_NET);
     });
@@ -73,6 +75,7 @@ Route::middleware('auth')->group(function() {
 
     // fund
     Route::prefix('fund')->group(function() {
+        Route::any('/home', [FundController::class, 'home'])->name(WebRoute::FUND_HOME);
         Route::get('/conversion', [FundController::class, 'conversionIndex'])->name(WebRoute::FUND_CONVERSION_INDEX);
         Route::post('/conversion', [FundController::class, 'conversionPost'])->name(WebRoute::FUND_CONVERSION_POST);
         Route::get('/transfer', [FundController::class, 'transferIndex'])->name(WebRoute::FUND_TRANSFER_INDEX);
@@ -91,6 +94,7 @@ Route::middleware('auth')->group(function() {
 
     // profile
     Route::prefix('auth')->group(function() {
+        Route::any('/home', [AuthController::class, 'home'])->name(WebRoute::AUTH_HOME);
         Route::get('/profile', [AuthController::class, 'profile'])->name(WebRoute::AUTH_PROFILE);
         Route::post('/profile', [AuthController::class, 'profilePost'])->name(WebRoute::AUTH_PROFILE_POST);
         Route::get('/bank', [AuthController::class, 'bank'])->name(WebRoute::AUTH_BANK);

@@ -34,7 +34,11 @@
         <div class="app-body min-vh-100 auth-layout" id="app-body">
 
             <div class="app-content container min-h-100 min-w-100" >
+                <div class="text-center">
+                    <img src="/img/logo.png" width="150px" height="150px"/>
+                </div>
                 <div class="col d-flex align-items-center justify-content-center">
+
                     <div class="card card-body mt-5 auth-card">
                         @include('partials.validation-error')
                         @include('flash::message')

@@ -6,7 +6,7 @@ return [
     App\LocaleConstants::FORM_AUTH_CODE => '推荐码',
     App\LocaleConstants::FORM_AUTH_NAME => '用户名',
     App\LocaleConstants::FORM_AUTH_CONFIRM_PASSWORD => '确认密码',
-    App\LocaleConstants::FORM_AUTH_LOGIN => '登录',
+    App\LocaleConstants::FORM_AUTH_LOGIN => '<span>登</span><span>录</span>',
     App\LocaleConstants::FORM_AUTH_REGISTER => '注册',
     App\LocaleConstants::FORM_AUTH_LOGOUT => '退出',
     App\LocaleConstants::FORM_AUTH_SECURITY_CODE => '安全码',

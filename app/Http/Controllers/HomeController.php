@@ -21,14 +21,12 @@ class HomeController extends Controller
 
     public function index()
     {
-        $acceptedCount = auth()->user()->invite_codes()
-            ->where('accepted', true)
-            ->whereHas('user', function ($query) {
-                $query->where('active', 1);
-            })
-            ->count();
+        return view('home', ['showBackButton' => false]);
+    }
 
-        return view('home', ['acceptedCount' => $acceptedCount]);
+    public function money_index()
+    {
+        return view('home_money');
     }
 
     /**

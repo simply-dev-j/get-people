@@ -11,6 +11,10 @@ use Symfony\Component\Console\Input\Input;
 
 class TeamController extends Controller
 {
+    public function home ()
+    {
+        return view('team_home');
+    }
     //
     public function index(Request $request)
     {

@@ -28,8 +28,8 @@ class UserSeeder extends Seeder
                     'security_code' => '111',
                     'active' => true,
                     'password' => Hash::make('123456'),
-                    'withdrawn' => 1000000,
-                    'money_added' => 1000000
+                    'withdrawn' => 5000000,
+                    'money_added' => 5000000
                 ]);
 
                 $user->entry()->create([
@@ -45,8 +45,8 @@ class UserSeeder extends Seeder
                     'security_code' => '111',
                     'active' => true,
                     'password' => Hash::make('123456'),
-                    'withdrawn' => 1000000,
-                    'money_added' => 1000000
+                    'withdrawn' => 5000000,
+                    'money_added' => 5000000
                 ]);
 
                 $user->entry()->create([

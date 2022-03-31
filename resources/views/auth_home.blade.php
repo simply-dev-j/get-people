@@ -19,17 +19,25 @@
 
     <div class="col-12 mt-3">
         <div class="item-container">
-            <div class="item item-red">
-                <a href="{{ route(App\WebRoute::HOME_MONEY) }}">账号首页</a>
-            </div>
-            <div class="item item-yellow">
-                <a href="{{ route(App\WebRoute::TEAM_HOME) }}">团队管理</a>
-            </div>
-            <div class="item item-blue">
-                <a href="{{ route(App\WebRoute::FUND_HOME) }}">财务管理</a>
+            <div class="item item-green">
+                <a href="{{ route(App\WebRoute::AUTH_PROFILE) }}">
+                    个人信息
+                </a>
             </div>
             <div class="item item-green">
-                <a href="{{ route(App\WebRoute::AUTH_HOME) }}">个人设置</a>
+                <a href="{{ route(App\WebRoute::AUTH_BANK) }}">
+                    银行信息
+                </a>
+            </div>
+            <div class="item item-green">
+                <a href="{{ route(App\WebRoute::AUTH_RESET_PASSWORD) }}">
+                    修改密码
+                </a>
+            </div>
+            <div class="item item-green">
+                <a href="{{ route(App\WebRoute::AUTH_PHONE) }}">
+                    手机绑定
+                </a>
             </div>
         </div>
     </div>

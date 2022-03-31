@@ -30,13 +30,13 @@
     <link rel="shortcut icon" href="/img/logo_header_{{ app()->getLocale() }}.png"/>
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed ">
+<body class="hold-transition sidebar-mini layout-fixed layout-footer-fixed">
     <div class="wrapper">
         @if ( auth()->user()->active )
             <!-- Top nav bar -->
             @include('navbar.navbar')
 
-            @include('navbar.aside_nav')
+            {{-- @include('navbar.aside_nav') --}}
 
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
@@ -57,6 +57,11 @@
                     @yield('content')
                 </section>
             </div>
+            <footer class="main-footer">
+                <a href="{{ route(App\WebRoute::AUTH_LOGOUT) }}" class="nav-link">
+                    安全退出
+                </a>
+            </footer>
         @else
             <div class="container pt-5">
                 <div class="alert alert-danger alert-dismissible">

@@ -18,9 +18,11 @@ class WebRoute {
     public const AUTH_RESET_PASSWORD = 'auth.reset.password';
     public const AUTH_RESET_PASSWORD_POST = 'auth.reset.password.post';
     public const AUTH_PHONE = 'auth.phone';
+    public const AUTH_HOME = 'auth.home';
 
     // home
     public const HOME_INDEX = 'home.index';
+    public const HOME_MONEY = 'home.money';
 
     // code
     public const CODE_INDEX = 'home.code.index';
@@ -31,6 +33,7 @@ class WebRoute {
     public const TRANSACTION_INDEX = 'home.transaction.index';
 
     // team
+    public const TEAM_HOME = 'team.home';
     public const TEAM_INDEX = 'team.index';
     public const TEAM_NET = 'team.net';
 
@@ -40,6 +43,7 @@ class WebRoute {
     public const CENTER_REGISTER_POST = 'center.register.post';
 
     // fund
+    public const FUND_HOME = 'fund.home';
     public const FUND_CONVERSION_INDEX = 'fund.converison.index';
     public const FUND_CONVERSION_POST = 'fund.conversion.post';
     public const FUND_TRANSFER_INDEX = 'fund.transfer.index';

@@ -28,4 +28,5 @@ mix
     ])
     .sass('resources/css/extension.scss', 'public/css', [
         //
-    ]);
+    ])
+    .version();

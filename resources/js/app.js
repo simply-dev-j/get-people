@@ -51,4 +51,10 @@ $(document).ready(function() {
 
         $(target).submit();
     })
+
+    $('[back-link]').on('click', function(e) {
+        e.preventDefault();
+
+        history.back()
+    })
 })

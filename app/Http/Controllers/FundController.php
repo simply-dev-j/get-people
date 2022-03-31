@@ -13,6 +13,11 @@ use Illuminate\Http\Request;
 
 class FundController extends Controller
 {
+
+    public function home()
+    {
+        return view('fund_home');
+    }
     //
     public function conversionIndex()
     {
