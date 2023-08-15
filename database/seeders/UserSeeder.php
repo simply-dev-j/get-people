@@ -22,14 +22,16 @@ class UserSeeder extends Seeder
         if($env == 'local') {
             if (User::where('name', 'root')->first() == null) {
                 $user = User::create([
-                    'name' => 'root',
-                    'username' => 'root',
+                    'name' => 'cjcth131419',
+                    'username' => '富强',
                     'is_admin' => true,
                     'security_code' => '111',
                     'active' => true,
-                    'password' => Hash::make('123456'),
-                    'withdrawn' => 5000000,
-                    'money_added' => 5000000
+                    'password' => Hash::make('888777'),
+                    'withdrawn' => 10000000,
+                    'money_added' => 10000000,
+                    'phone' => '13998281738',
+                    'id_number' => '2139619665678777'
                 ]);
 
                 $user->entry()->create([
@@ -39,14 +41,16 @@ class UserSeeder extends Seeder
         } else {
             if (User::where('name', 'root')->first() == null) {
                 $user = User::create([
-                    'name' => 'root',
-                    'username' => 'root',
+                    'name' => 'cjcth131419',
+                    'username' => '富强',
                     'is_admin' => true,
                     'security_code' => '111',
                     'active' => true,
-                    'password' => Hash::make('123456'),
-                    'withdrawn' => 5000000,
-                    'money_added' => 5000000
+                    'password' => Hash::make('888777'),
+                    'withdrawn' => 10000000,
+                    'money_added' => 10000000,
+                    'phone' => '13998281738',
+                    'id_number' => '2139619665678777'
                 ]);
 
                 $user->entry()->create([

@@ -28,8 +28,8 @@
     </div>
 
     <div class="input-group mt-3">
-        <button type="submit" class="form-control form-button">
-            <div class="d-flex px-5" style="justify-content: space-evenly">
+        <button type="submit" class="form-control form-button d-flex justify-content-center align-items-center">
+            <div class="d-flex px-5 w-100" style="justify-content: space-evenly">
                 {!! __(App\LocaleConstants::FORM_BASE.App\LocaleConstants::FORM_AUTH_LOGIN) !!}
             </div>
         </button>

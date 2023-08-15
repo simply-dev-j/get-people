@@ -18,6 +18,10 @@ class TeamController extends Controller
     //
     public function index(Request $request)
     {
+        if (!UserUtil::isAdminOrCompany()) {
+            return redirect()->back();
+        }
+
         $company_id = $request->get('company_id');
 
         // No need to show root

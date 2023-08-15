@@ -126,7 +126,7 @@ body {
         color: #080899;
         font-weight: bold;
         font-size: $default-font-size;
-        min-width: 4rem;
+        min-width: $default-font-size * 5;
     }
 }
 
@@ -287,7 +287,6 @@ ul.pagination  {
 }
 
 .app-content {
-    padding-top: $navbar-height + 10px;
     padding-bottom: 20px;
 }
 

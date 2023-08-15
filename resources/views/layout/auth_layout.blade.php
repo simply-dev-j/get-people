@@ -35,7 +35,7 @@
 
             <div class="app-content container min-h-100 min-w-100" >
                 <div class="text-center">
-                    <img src="/img/logo.png" width="150px" height="150px"/>
+                    <img src="/img/logo-bright.png" width="100%" height="auto"/>
                 </div>
                 <div class="col d-flex align-items-center justify-content-center">
 

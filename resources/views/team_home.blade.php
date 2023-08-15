@@ -19,11 +19,14 @@
 
     <div class="col-12 mt-3">
         <div class="item-container">
+
+            @if(App\Utils\UserUtil::isAdminOrCompany())
             <div class="item item-yellow">
-                <a href="{{ route(App\WebRoute::TEAM_INDEX) }}" class="{{ App\Utils\UserUtil::isAdminOrCompany() ? '' : 'disabled' }}">
+                <a href="{{ route(App\WebRoute::TEAM_INDEX) }}" {{ App\Utils\UserUtil::isAdminOrCompany() ? '' : 'disabled' }}>
                     报单列表
                 </a>
             </div>
+            @endif
 
             {{-- root 에만 유효 --}}
             @if(App\Utils\UserUtil::isAdmin())
